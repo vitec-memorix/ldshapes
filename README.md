@@ -9,12 +9,20 @@ LDShapes is a software tool used to define rdf-based data structures and transfo
 make sure you use node >= 10.13.0, except for v13
 
 ```bash
+cd ldshapes-app-backend
 $ npm install
+
+cd ../
+
+cd ldshapes-app-frontend
+npm install
 ```
 
-## Running the app
+## Running the application
 
 ```bash
+cd ldshapes-app-backend
+
 # development
 $ npm run start
 
@@ -25,9 +33,18 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+### For running the frontend (Run in a separate cmd)
+```
+cd ldshapes-app-frontend
+
+npm run serve
+```
+
+## Testing the backend
 
 ```bash
+cd ldshapes-app-backend
+
 # unit tests
 $ npm run test
 
@@ -36,6 +53,16 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+### Frontend Compiles and minifies for production
+```
+npm run build
+```
+
+### Frontend Lints and fixes files
+```
+npm run lint
 ```
 
 ## Cli
