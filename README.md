@@ -1,4 +1,4 @@
-# LDShapes
+![LDShapes Logo](frontend/public/ldshapes-logo-light.png?raw=true "")
 
 ## Description
 
