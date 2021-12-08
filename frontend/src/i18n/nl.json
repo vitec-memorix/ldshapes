@@ -1,0 +1,59 @@
+{
+  "welcome": "Welkom bij",
+  "functionalityForNow": "Functionaliteit voor nu",
+  "createNewShape": "Maak een shape",
+  "pickShapeText": "Welke shape wil je gebruiken.",
+  "beginNewShape": "Start nieuwe shape",
+  "iri" : "Iri",
+  "prefix" : "Prefix",
+  "shape": {
+    "label" : "Shape label",
+    "identifier" : "Shape identifier",
+    "prefix" : "Shape prefix",
+    "comment" : "Shape commentaar",
+    "pick_node" : "Kies een nodetype om toe te voegen",
+    "target_class" : "TargetClass"
+  },
+  "group": {
+    "add" : "Voeg groep toe",
+    "label" : "Groep label"
+  },
+  "property": {
+    "add" : "Voeg property toe",
+    "label" : "Property label",
+    "maxCount" : "Maximaal aantal waarden",
+    "minCount" : "Minimaal aantal waarden",
+    "path" : "Property path"
+  },
+  "nexttab" : "Volgende tab",
+  "autofill" : "automatisch gevuld",
+  "download" : "Download",
+  "save" : "Opslaan",
+  "createNewResources" : {
+	 "title": "Maak nieuwe Linked Data",
+	 "create" : {
+	   "source" : {
+		 "title" : "Upload uw bron bestand",
+		 "tab": "1 Bron",
+		 "sourcefilename" : "Bronbestand"
+	   },
+	   "shacl" : {
+		 "title" : "Selecteer een Shape",
+		 "tab" : "2 Shape (rdf)"
+	   },
+	   "mapping" : {
+		 "title" : "Verbind de bron velden met de Shacl-Shape velden",
+		 "tab": "3 Mapping",
+		 "source": "Bron veld",
+		 "plugin": "Plugin",
+		 "shapeTarget": "Shape property (doel)"
+	   }
+
+	 }
+  },
+  "validate" : {
+    "absoluteIri": "Dit is geen geldige IRI",
+    "required": "Dit veld is verplicht",
+    "prefix": "Dit is geen geldige prefix"
+  }
+}

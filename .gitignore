@@ -1,3 +1,4 @@
+/resources/*/*.ttl
 
 # OS
 .DS_Store
