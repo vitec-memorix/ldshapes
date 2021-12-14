@@ -1,0 +1,37 @@
+{
+  "languages": [
+    "nl",
+    "en"
+  ],
+  "rdf_shape_classes": {
+    "http://www.w3.org/ns/shacl#NodeShape": "sh:NodeShape",
+    "http://memorix.io/ontology#Recordtype": "memorix:Recordtype",
+    "http://www.w3.org/2002/07/owl#class":"owl:class",
+    "https://www.ica.org/standards/RiC/ontology#agent":"rico:agent"
+  },
+  "property_paths": {
+    "http://www.w3.org/2002/07/owl#":"owl",
+    "https://www.ica.org/standards/RiC/ontology#":"rico"
+  },
+  "default_prefixes": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "dash": "http://datashapes.org/dash#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "memorix": "http://memorix.io/ontology#",
+    "rico": "https://www.ica.org/standards/RiC/ontology#"
+  },
+  "property_types" : {
+    "text" : {
+      "http://www.w3.org/ns/shacl#datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "http://datashapes.org/dash#singleLine": true
+    },
+    "textarea" : {
+      "http://www.w3.org/ns/shacl#datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "http://datashapes.org/dash#editor": "http://datashapes.org/dash#TextAreaEditor"
+    }
+  }
+}

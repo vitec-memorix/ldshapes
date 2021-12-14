@@ -1,0 +1,37 @@
+{
+  "welcome": "Welcome to",
+  "functionalityForNow": "Functionality for now",
+  "pickShapeText": "Which existing shape do you want to use.",
+  "createNewShape": "Create new shape",
+  "iri" : "Iri",
+  "prefix" : "Prefix",
+  "shape": {
+    "label" : "Shape label",
+    "identifier" : "Shape identifier",
+    "prefix" : "Shape prefix",
+    "comment" : "Shape comment",
+    "fields" : {
+      "label" : "Label",
+      "maxCount" : "Max number of values",
+      "type" : {
+        "label" : "Field type",
+        "date" : "Date",
+        "text" : "Text"
+      }
+    }
+  },
+  "baseUrl" : "Base url",
+  "autofill" : "auto fill",
+  "prefixes" : "Prefixes",
+  "properties" : "Properties",
+  "prefix" : {
+    "search" : "Add prefix. Type to search..."
+  },
+  "memorixCompatible" : "Shape needs to be Memorix compatible",
+  "download" : "Download",
+  "validate" : {
+    "absoluteIri": "This field must be a valid absolute IRI",
+    "required": "This field is required",
+    "prefix": "This field must be a valid prefix"
+  }
+}
