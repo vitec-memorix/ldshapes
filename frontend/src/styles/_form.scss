@@ -1,3 +1,9 @@
-.error-message {
-  color:#dc3545;
+.form-wrapper {
+  .error-message {
+    color: #dc3545;
+  }
+  label {
+    font-weight:bold;
+    text-align:right;
+  }
 }

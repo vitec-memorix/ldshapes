@@ -1,11 +1,7 @@
 <template>
   <div class="home">
     <h1>{{ msg }}</h1>
-    <img alt="LDShapes logo" src="../assets/ldshapes-logo-light.png" class="logo">
-    <h3>{{ $t('functionalityForNow') }}</h3>
-    <ul class="list-group">
-      <li class="list-group-item"><a href="/shape/pick" rel="noopener">{{ $t('createNewShape') }}</a></li>
-    </ul>
+    <img alt="LDShapes logo" src="../../public/images/ldshapes-logo-light.png" class="logo">
   </div>
 </template>
 

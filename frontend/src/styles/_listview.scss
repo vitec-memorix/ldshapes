@@ -1,0 +1,14 @@
+.list-view {
+  .row {
+    > div {
+      padding-top:10px;
+      padding-bottom:10px;
+      border-bottom: 1px solid $border-grey;
+      &.list-header {
+        font-weight: bold;
+        background: $light-grey;
+        border-bottom: 2px solid $light-blue;
+      }
+    }
+  }
+}
