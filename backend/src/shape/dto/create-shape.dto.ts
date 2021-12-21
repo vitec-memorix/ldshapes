@@ -28,14 +28,14 @@ export class ShapeDto extends BaseShapeDto {
   language: string;
   identifier: string;
   targetClass: string;
-  type: string[];
+  memorixCompatible: boolean;
   comment: string;
   constructor(bodyValue: any = {}) {
     super(bodyValue);
     this.language = bodyValue.language;
     this.identifier = bodyValue.identifier;
     this.targetClass = bodyValue.targetClass;
-    this.type = bodyValue.type;
+    this.memorixCompatible = bodyValue.memorixCompatible;
     this.comment = bodyValue.comment;
   }
 }

@@ -25,6 +25,7 @@
     "minCount" : "Minimaal aantal waarden",
     "path" : "Property path"
   },
+  "memorixCompatible" : "Shape is voor Memorix",
   "nexttab" : "Volgende tab",
   "autofill" : "automatisch gevuld",
   "download" : "Download",

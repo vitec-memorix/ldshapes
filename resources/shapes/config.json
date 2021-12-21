@@ -3,12 +3,6 @@
     "nl",
     "en"
   ],
-  "rdf_shape_classes": {
-    "http://www.w3.org/ns/shacl#NodeShape": "sh:NodeShape",
-    "http://memorix.io/ontology#Recordtype": "memorix:Recordtype",
-    "http://www.w3.org/2002/07/owl#class":"owl:class",
-    "https://www.ica.org/standards/RiC/ontology#agent":"rico:agent"
-  },
   "property_paths": {
     "http://www.w3.org/2002/07/owl#":"owl",
     "https://www.ica.org/standards/RiC/ontology#":"rico"

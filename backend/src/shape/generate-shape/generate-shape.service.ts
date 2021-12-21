@@ -76,12 +76,10 @@ export class GenerateShapeService {
 
   async addShape() {
     const self = this;
-    for (const key in shapeConfig.rdf_shape_classes) {
-      if (
-        self.createShapeDto.shape.type.includes(shapeConfig.rdf_shape_classes[key])
-      ) {
-        self.addNamedNode(self.prefixes['rdf'] + 'type', key);
-      }
+
+    self.addNamedNode(self.prefixes['rdf'] + 'type', 'http://www.w3.org/ns/shacl#NodeShape');
+    if(self.createShapeDto.shape.memorixCompatible === true) {
+      self.addNamedNode(self.prefixes['rdf'] + 'type', 'http://memorix.io/ontology#Recordtype');
     }
 
     this.addNamedNode(

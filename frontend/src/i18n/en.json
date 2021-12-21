@@ -24,9 +24,6 @@
   "autofill" : "auto fill",
   "prefixes" : "Prefixes",
   "properties" : "Properties",
-  "prefix" : {
-    "search" : "Add prefix. Type to search..."
-  },
   "memorixCompatible" : "Shape needs to be Memorix compatible",
   "download" : "Download",
   "validate" : {
