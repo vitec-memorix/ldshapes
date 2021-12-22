@@ -2,9 +2,10 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-sm-8 page-header">
-                <a href="/shape/pick">Shape creator</a> / Name of shape <span class="bi-edit"></span>
+                <a href="/shape/pick">Shape creator</a> / {{settings.name}} <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
             </div>
             <div class="col-sm-4 text-end" v-show="getActiveTab() === 'shape' ">
+                <button class="btn btn-primary" @click="showValues">Test</button>
                 <button class="btn btn-primary" @click="chooseAndRedirect('')"><span class="bi-plus-lg"></span> {{ $t('beginNewShape') }}</button>
                 <button class="btn btn-primary disabled ms-3" disabled="true"><span class="bi-upload"></span> Import</button>
             </div>
@@ -42,6 +43,8 @@
                         </div>
                     </div>
                 </div>
+                <title-modal :value="settings.name" @saveValue="saveValue" :modal-title="$t('ChangeTitle')"/>
+                <label-modal :value="settings.shape.label" :title="$t('AddLabel')" field="label"/>
             </Form>
         </div>
     </div>
@@ -55,6 +58,8 @@
   import PrefixTab from './PrefixTab.vue';
   import GroupTab from './GroupTab.vue';
   import PropertyTab from './PropertyTab.vue';
+  import TitleModal from './modal/TitleModal.vue';
+  import LabelModal from './modal/LabelModal.vue';
   import { Form } from 'vee-validate';
   import shapeConfig from '../../../../resources/shapes/config.json';
 
@@ -63,7 +68,7 @@
   export default defineComponent({
     el: '#app',
     components: {
-      ShapeTab, PrefixTab, GroupTab, PropertyTab, Form },
+      ShapeTab, PrefixTab, GroupTab, PropertyTab, TitleModal, LabelModal, Form },
     data() {
       return {
         currentTab:'shape',
@@ -103,6 +108,12 @@
       },
       getActiveTab() :string {
         return this.currentTab;
+      },
+      showValues() {
+        console.log(this.settings);
+      },
+      saveValue (field:any, newValue:any) {
+        this.settings[field] = newValue;
       }
     }
   });

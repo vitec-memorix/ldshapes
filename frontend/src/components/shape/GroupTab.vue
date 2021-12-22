@@ -12,8 +12,20 @@
                         <ErrorMessage :name="'group-id-'+index" class="error-message" />
                     </div>
                     <div class="form-group col-12">
-                        <label class="form-label fw-bold">rdfs:label</label>
-                        <input type="text" :value="group.label" @input="saveValue('label',index, $event.target.value)" class="form-control" :placeholder="$t('group.label')">
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">rdfs:label</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="labelinput-container form-control">
+                                        <span v-for="(label, index) in group.label" :key="index" class="labelinput rounded-3">
+                                            {{label.title}}:<span class="language">{{label.language}}</span> <span class="bi-x-lg" v-on:click="removeRow(index,'shape.label')"></span>
+                                        </span>
+                                    </div>
+                                    <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal">Add</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -23,6 +35,7 @@
         </div>
     </draggable>
     <button type="button" class="btn btn-info" v-on:click="addGroup()">{{ $t('group.add') }}</button>
+    <label-modal :title="$t('AddLabel')" :index="labelIndex" field="label"/>
 </template>
 <script lang="ts">
   import {defineComponent} from "vue";
@@ -51,6 +64,7 @@
         group:this.value,
         current_type:'',
         config: shapeConfig,
+        labelIndex:1,
       }
     },
     emits: ['saveValue'],

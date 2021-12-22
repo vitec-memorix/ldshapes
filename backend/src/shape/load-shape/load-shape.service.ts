@@ -22,6 +22,8 @@ export class LoadShapeService {
   async create(file) {
     const shapeContent = await this.readShape(file);
 
+    this.shapeDto.name = file.replace(/\.[^/.]+$/, "");
+
     this.setPrefixes(shapeContent['prefixes']);
 
     const parents = this.getShapeParents(shapeContent['quads']);
@@ -163,6 +165,7 @@ export class LoadShapeService {
 
     shapeValues['id'] = this.fixupLocalUrl(parent);
     shapeValues['memorixCompatible'] = false;
+    shapeValues['label'] = [];
     let index = '';
     let value;
     for (const key in quads) {
@@ -174,8 +177,8 @@ export class LoadShapeService {
             }
             break;
           case 'http://www.w3.org/2000/01/rdf-schema#label':
-            shapeValues['language'] = quads[key].object.language;
-            shapeValues['label'] = quads[key].object.value;
+            console.log(quads[key].object.value);
+            shapeValues['label'].push({'title':quads[key].object.value,'language':quads[key].object.language});
             break;
           case 'http://www.w3.org/ns/shacl#maxCount':
           case 'http://www.w3.org/ns/shacl#minCount':

@@ -1,8 +1,8 @@
 {
-  "languages": [
-    "nl",
-    "en"
-  ],
+  "languages": {
+  "nl": "Dutch",
+  "en": "English"
+},
   "property_paths": {
     "http://www.w3.org/2002/07/owl#":"owl",
     "https://www.ica.org/standards/RiC/ontology#":"rico"

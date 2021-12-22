@@ -9,17 +9,14 @@
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">rdfs:label</label>
         <div class="col-sm-10">
-            <input type="text" v-model="shape.label" @input="saveValue('label', $event.target.value)" class="form-control" :placeholder="$t('shape.label')" >
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">language</label>
-        <div class="col-sm-10">
-            <select :value="shape.language" @input="saveValue('language', $event.target.value)" class="form-select" >
-                <option v-for="(language, index) in config.languages" :key="index" :value="language">
-                    {{language}}
-                </option>
-            </select>
+            <div class="input-group">
+                <div class="labelinput-container form-control">
+                    <span v-for="(label, index) in shape.label" :key="index" class="labelinput rounded-3">
+                        {{label.title}}:<span class="language">{{label.language}}</span> <span class="bi-x-lg" v-on:click="removeRow(index,'shape.label')"></span>
+                    </span>
+                </div>
+                <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal">Add</button>
+            </div>
         </div>
     </div>
     <div class="row mb-3">
@@ -48,16 +45,22 @@
             </div>
         </div>
     </div>
+<!--    <label-modal :value="shape.label" :title="$t('AddLabel')" field="label"/>-->
 </template>
 <script lang="ts">
   import {defineComponent} from "vue";
+  // import LabelModal from './modal/LabelModal.vue';
   // import transformString from '@/mixins/transformString';
   import { validateAbsoluteIRI } from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
   import shapeConfig from '../../../../resources/shapes/config.json';
 
   export default defineComponent({
-    components: { ErrorMessage, Field },
+    components: {
+      ErrorMessage,
+      Field,
+      // LabelModal
+    },
     props: {
       value: {
         type: Object,
@@ -82,6 +85,25 @@
       saveValue (index:string, newValue:any) {
         this.$emit('saveValue', 'shape', index, newValue)
       },
+      removeRow: function(index:any,object:any) {
+
+        var thisObject = (object).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
+        if(Number.isInteger(index)) {
+          thisObject.splice(index, 1);
+        } else {
+          delete thisObject[index];
+        }
+      },
     },
   });
+  //
+  // const app = createApp({})
+  //
+  // const AsyncComp = defineAsyncComponent(() =>
+  //   import('./modal/LabelModal')
+  // )
+  //
+  // app.component('async-example', AsyncComp);
+
+
 </script>

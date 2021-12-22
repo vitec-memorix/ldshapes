@@ -41,7 +41,7 @@ export class GenerateShapeService {
     this.addShapeProperties();
 
     await this.writer.end((error, result) => {
-      fs.writeFile(self.fileService.getBasePath() + 'shapes/' + self.createShapeDto.shape.identifier + '.ttl', result, (err) => {
+      fs.writeFile(self.fileService.getBasePath() + 'shapes/' + self.createShapeDto.name + '.ttl', result, (err) => {
         // throws an error, you could also catch it here
         if (err) throw err;
       });
@@ -98,11 +98,13 @@ export class GenerateShapeService {
       self.writer.list([namedNode(this.prefixes['rdf'] + 'type')]),
     );
 
-    this.addLiteral(
-      this.prefixes['rdfs'] + 'label',
-      this.createShapeDto.shape.label,
-      this.createShapeDto.shape.language,
-    );
+    this.createShapeDto.shape.label.forEach(function (label) {
+      self.addLiteral(
+        self.prefixes['rdfs'] + 'label',
+        label.title,
+        label.language,
+      );
+    });
 
     this.addLiteral(
       this.prefixes['rdfs'] + 'comment',
