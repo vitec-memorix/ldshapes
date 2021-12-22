@@ -28,23 +28,23 @@
                 </ul>
                 <div class="tab-content p-2 border-start pb-5" id="myTabContent">
                     <div class="tab-pane fade show active" id="shape" role="tabpanel" aria-labelledby="shape-tab">
-                        <shape-tab :value="settings.shape"/>
+                        <shape-tab :value="settings.shape" @setModalField="setCurrentModalField"/>
                     </div>
                     <div class="tab-pane fade" id="prefix" role="tabpanel" aria-labelledby="prefix-tab">
-                        <prefix-tab :value="settings.prefix"/>
+                        <prefix-tab :value="settings.prefix" />
                     </div>
                     <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
-                        <group-tab :value="settings.group"/>
+                        <group-tab :value="settings.group" @setModalField="setCurrentModalField" />
                     </div>
                     <div class="tab-pane fade" id="property" role="tabpanel" aria-labelledby="property-tab">
-                        <property-tab :value="settings.property" :settings="settings"/>
+                        <property-tab :value="settings.property" @setModalField="setCurrentModalField" :settings="settings"/>
                         <div class="pt-3">
                             <button type="submit" class="btn btn-primary">{{ $t('save') }}</button>
                         </div>
                     </div>
                 </div>
                 <title-modal :value="settings.name" @saveValue="saveValue" :modal-title="$t('ChangeTitle')"/>
-                <label-modal :value="settings.shape.label" :title="$t('AddLabel')" field="label"/>
+                <label-modal @saveValue="addLabel" :title="$t('AddLabel')" :field="currentModalField"/>
             </Form>
         </div>
     </div>
@@ -63,7 +63,7 @@
   import { Form } from 'vee-validate';
   import shapeConfig from '../../../../resources/shapes/config.json';
 
-  const settings: any = {shape:{}, prefix:[], group:[], property:[]};
+  const settings: any = {name:'', shape:{}, prefix:[], group:[], property:[]};
 
   export default defineComponent({
     el: '#app',
@@ -71,6 +71,7 @@
       ShapeTab, PrefixTab, GroupTab, PropertyTab, TitleModal, LabelModal, Form },
     data() {
       return {
+        currentModalField:'',
         currentTab:'shape',
         optionalPrefixes: {},
         listPrefix: '',
@@ -103,6 +104,9 @@
         sessionStorage.setItem('sourceShape', value);
         window.location.reload();
       },
+      setCurrentModalField(field:string) {
+        this.currentModalField = field;
+      },
       setCurrentTab(tab:string) {
         this.currentTab = tab;
       },
@@ -114,6 +118,10 @@
       },
       saveValue (field:any, newValue:any) {
         this.settings[field] = newValue;
+      },
+      addLabel (field:any, newTitle:any, newLanguage:any) {
+        var thisObject = (field).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
+        thisObject.push({'title':newTitle,'language':newLanguage});
       }
     }
   });

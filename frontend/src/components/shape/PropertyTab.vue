@@ -8,7 +8,14 @@
                 <div class="row">
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">rdfs:label</label>
-                        <input type="text" :value="property.label" @input="saveValue('label',index, $event.target.value)" class="form-control" :placeholder="$t('property.label')">
+                        <div class="input-group">
+                            <div class="labelinput-container form-control">
+                                <span v-for="(label, propertyindex) in property.label" :key="propertyindex" class="labelinput rounded-3">
+                                    {{label.title}}:<span class="language">{{label.language}}</span> <span class="bi-x-lg" v-on:click="removeRow(propertyindex,'property.' + index + '.label')"></span>
+                                </span>
+                            </div>
+                            <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal"  @click="setModalField('settings.property.'+index+'.label')">Add</button>
+                        </div>
                     </div>
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">sh:path</label>
@@ -18,7 +25,7 @@
                         <label class="form-label fw-bold">sh:group</label>
                         <select :value="property.group !== '' ? property.group : settings.group[0].id " @input="saveValue('group', index, $event.target.value)" class="form-select">
                             <option v-for="(group, index) in settings.group" :key="index" :value="group.id">
-                                {{group.label}}
+                                {{ (group.label[0] !== undefined) ? group.label[0].title : 'Undefined' }}
                             </option>
                         </select>
                     </div>
@@ -43,7 +50,7 @@
                 </div>
             </div>
             <div class="form-property col-1 align-self-center">
-                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeProperty(index)"></span>
+                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeRow(index,'property')"></span>
             </div>
         </div>
     </draggable>
@@ -81,7 +88,7 @@
         config: shapeConfig,
       }
     },
-    emits: ['saveValue'],
+    emits: ['saveValue','setModalField'],
     methods: {
       saveValue (field:string, index:string, newValue:any) {
         this.property[index][field] = newValue;
@@ -90,11 +97,16 @@
       addProperty () {
         this.$emit('saveValue', 'property', this.property.length, {});
       },
-      removeProperty: function(index:number) {
-        this.property.splice(index, 1);
-        if(this.property.length < 1) {
-          this.addProperty();
+      removeRow: function(index:any,object:any) {
+        var thisObject = (object).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
+        if(Number.isInteger(index)) {
+          thisObject.splice(index, 1);
+        } else {
+          delete thisObject[index];
         }
+      },
+      setModalField: function(field:string) {
+        this.$emit('setModalField', field);
       },
     },
   });

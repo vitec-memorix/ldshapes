@@ -15,7 +15,7 @@
                         {{label.title}}:<span class="language">{{label.language}}</span> <span class="bi-x-lg" v-on:click="removeRow(index,'shape.label')"></span>
                     </span>
                 </div>
-                <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal">Add</button>
+                <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal"  @click="setModalField('settings.shape.label')">Add</button>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
         config: shapeConfig,
       }
     },
-    emits: ['saveValue'],
+    emits: ['saveValue','setModalField'],
     methods: {
       validateAbsoluteIRI,
       saveValue (index:string, newValue:any) {
@@ -94,16 +94,11 @@
           delete thisObject[index];
         }
       },
+      setModalField: function(field:string) {
+        this.$emit('setModalField', field);
+      },
     },
   });
-  //
-  // const app = createApp({})
-  //
-  // const AsyncComp = defineAsyncComponent(() =>
-  //   import('./modal/LabelModal')
-  // )
-  //
-  // app.component('async-example', AsyncComp);
 
 
 </script>

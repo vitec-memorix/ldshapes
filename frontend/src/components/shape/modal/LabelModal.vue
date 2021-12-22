@@ -47,15 +47,11 @@
   export default defineComponent({
   //   components: { draggable: VueDraggableNext, ErrorMessage, Field },
     props: {
-      value: {
-        type: Object,
-        required: true
-      },
       title : {
         type: String,
         required: true
       },
-      modalId : {
+      field : {
         type: String,
         required: true
       }
@@ -66,12 +62,6 @@
         config:shapeConfig,
         label:'',
         language:'nl',
-        labels:this.value,
-      }
-    },
-    watch: {
-      value: function(newVal:any) {
-        this.labels = newVal;
       }
     },
     methods: {
@@ -80,7 +70,8 @@
         this.language = 'nl';
       },
       addValueToField() {
-        this.labels.push({'title':this.label,'language':this.language});
+        this.$emit('saveValue',this.field,this.label,this.language);
+        // this.labels.push({'title':this.label,'language':this.language});
         this.resetForm();
       },
     },

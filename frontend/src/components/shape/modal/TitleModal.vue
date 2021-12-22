@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-start">
-                    <button type="button" class="btn btn-primary" @click="addValueToField" data-bs-dismiss="modal">{{ $t('save') }}</button>
+                    <button type="button" class="btn btn-primary" @click="addValueToField" data-bs-dismiss="modal">{{$t('button.add')}}</button>
                     <button type="button" class="btn btn-light btn-outline-dark" @click="resetForm" data-bs-dismiss="modal">{{$t('button.cancel')}}</button>
                 </div>
             </div>
@@ -65,6 +65,7 @@
       },
       addValueToField() {
         this.$emit('saveValue', 'name', this.title)
+
       },
     },
   });

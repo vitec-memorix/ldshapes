@@ -58,6 +58,7 @@
     "prefix": "Dit is geen geldige prefix"
   },
   "AddLabel": "Label toevoegen",
+  "ChangeTitle": "Titel aanpassen",
   "language": {
     "Dutch" : "Nederlands",
     "English" : "Engels"
