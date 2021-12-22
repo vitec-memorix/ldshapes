@@ -1,9 +1,22 @@
 .form-wrapper {
   .error-message {
-    color: #dc3545;
+    color: $red;
   }
   label {
     font-weight:bold;
     text-align:right;
   }
+  .labelinput-container {
+    .labelinput {
+      background:$secondary;
+      padding:5px 10px;
+      .language {
+        text-transform: uppercase;
+      }
+      &:not(:first-of-type) {
+        margin-left:10px;
+      }
+    }
+  }
+
 }
