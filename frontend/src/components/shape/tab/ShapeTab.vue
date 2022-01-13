@@ -53,7 +53,7 @@
   // import transformString from '@/mixins/transformString';
   import { validateAbsoluteIRI } from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
-  import shapeConfig from '../../../../resources/shapes/config.json';
+  import shapeConfig from '../../../../../resources/shapes/config.json';
 
   export default defineComponent({
     components: {

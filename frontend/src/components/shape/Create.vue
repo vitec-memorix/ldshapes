@@ -54,10 +54,10 @@
   import { defineComponent } from 'vue'
   import axios from "axios";
   import { server } from "../../helper";
-  import ShapeTab from './ShapeTab.vue';
-  import PrefixTab from './PrefixTab.vue';
-  import GroupTab from './GroupTab.vue';
-  import PropertyTab from './PropertyTab.vue';
+  import ShapeTab from './tab/ShapeTab.vue';
+  import PrefixTab from './tab/PrefixTab.vue';
+  import GroupTab from './tab/GroupTab.vue';
+  import PropertyTab from './tab/PropertyTab.vue';
   import TitleModal from './modal/TitleModal.vue';
   import LabelModal from './modal/LabelModal.vue';
   import { Form } from 'vee-validate';

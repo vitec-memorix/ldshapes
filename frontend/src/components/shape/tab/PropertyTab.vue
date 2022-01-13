@@ -59,7 +59,7 @@
 <script lang="ts">
   import {defineComponent} from "vue";
   import { VueDraggableNext } from 'vue-draggable-next'
-  import shapeConfig from '../../../../resources/shapes/config.json';
+  import shapeConfig from '../../../../../resources/shapes/config.json';
   import sortNestedArray from "@/mixins/sortNestedArray";
 
   export default defineComponent({

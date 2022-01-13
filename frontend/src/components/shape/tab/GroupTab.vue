@@ -43,7 +43,7 @@
   import { validateAbsoluteIRI } from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
   import sortNestedArray from '@/mixins/sortNestedArray';
-  import shapeConfig from '../../../../resources/shapes/config.json';
+  import shapeConfig from '../../../../../resources/shapes/config.json';
 
   export default defineComponent({
     components: { draggable: VueDraggableNext, ErrorMessage, Field },
