@@ -1,0 +1,44 @@
+
+body {
+  background:$grey;
+
+  .main-content {
+    max-width:1440px;
+    margin:0px auto;
+    background:$white;
+    min-height:100vh;
+  }
+  .page-content {
+    padding-top:40px;
+    padding-bottom:100px;
+  }
+
+  h1, h2, h3 {
+    color:$primary;
+  }
+
+  .btn.disabled {
+    opacity: 0.1;
+  }
+
+  .page-header {
+    font-size:2em;
+    font-weight:normal;
+    line-height:1.4em;
+  }
+
+  .btn-primary {
+    &:hover {
+      color: $hover-color;
+      background-color: $hover-background;
+      border-color: $hover-background;
+    }
+  }
+
+  .modal-footer {
+    border-top-width:0px;
+  }
+  .modal-header {
+    border-bottom-width:0px;
+  }
+}

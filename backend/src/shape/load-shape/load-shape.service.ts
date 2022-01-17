@@ -162,16 +162,16 @@ export class LoadShapeService {
     const shapeValues = {};
 
     shapeValues['id'] = this.fixupLocalUrl(parent);
-    shapeValues['type'] = [];
+    shapeValues['memorixCompatible'] = false;
     let index = '';
     let value;
     for (const key in quads) {
       if (quads[key].subject.value === parent) {
         switch (quads[key].predicate.value) {
           case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type':
-            shapeValues['type'].push(
-              this.getShorthand(quads[key].object.value),
-            );
+            if(quads[key].object.value === 'http://memorix.io/ontology#Recordtype') {
+              shapeValues['memorixCompatible'] = true;
+            }
             break;
           case 'http://www.w3.org/2000/01/rdf-schema#label':
             shapeValues['language'] = quads[key].object.language;

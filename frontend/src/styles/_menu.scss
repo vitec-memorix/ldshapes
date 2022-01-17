@@ -1,0 +1,67 @@
+.navbar {
+  background:$menu-blue;
+  color:$white;
+  padding:0px;
+  #navbarNavDropdown {
+    position:relative;
+    .navbar-right {
+      border-right-width:0px;
+      border-left-width:0px;
+      @media (min-width: $medium) {
+        position:absolute;
+        right:0px;
+      }
+    }
+  }
+  .navbar-toggler {
+    border:2px solid $white;
+    color:$white;
+    font-size:25px;
+    &:focus {
+      box-shadow:0 0 0 0px;
+    }
+  }
+  .nav-item {
+    display:inline-block;
+    border-bottom:5px solid $menu-blue;
+    min-width:140px;
+    &.active,
+    &:hover {
+      border-bottom:5px solid $secondary;
+    }
+    &.active {
+      background: $primary;
+    }
+    @media (min-width: $medium) {
+      border-right:2px solid $blue;
+      &:first-of-type {
+        border-left:2px solid $blue;
+      }
+    }
+  }
+  a {
+    color:$white;
+    text-align:center;
+    cursor:pointer;
+    &:hover {
+      color:$white;
+    }
+    &.navbar-brand {
+      text-align:left;
+      display:inline-block;
+      height:76px;
+      font-size:1px;
+      text-indent:-100px;
+      min-width:280px;
+      background:url('/images/ldshapes-logo-dark.png');
+      background-size: auto 70%;
+      background-repeat: no-repeat;
+      background-position: left center;
+    }
+    span {
+      font-size:25px;
+      display:block;
+      padding-bottom:5px;
+    }
+  }
+}

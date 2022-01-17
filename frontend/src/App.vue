@@ -1,22 +1,50 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Home</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/shape/pick">{{ $t('createNewShape') }}</a>
-          </li>
-        </ul>
+  <div class="main-content">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="icon-menu"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item" :class="isActiveMenu('shape')">
+              <a class="nav-link" href="/shape/pick"><span class="bi-grid"></span>Shape creator</a>
+            </li>
+            <li class="nav-item" :class="isActiveMenu('transformer')">
+              <a class="nav-link" href="/transformer/index"><span class="bi-share"></span>LD Transformer</a>
+            </li>
+            <li class="nav-item navbar-right" :class="isActiveMenu('config')">
+              <a class="nav-link" href="/config/index"><span class="bi-gear"></span>Config</a>
+            </li>
+          </ul>
+        </div>
       </div>
+    </nav>
+    <div class="page-content">
+      <router-view/>
     </div>
-  </nav>
-  <router-view/>
+  </div>
 </template>
+<script lang="ts">
+  import {defineComponent} from "vue";
 
+  export default defineComponent({
+    data() {
+      return {
+        currentRoute: window.location.pathname
+      }
+    },
+    methods: {
+      isActiveMenu(menu:string):string {
+        if(this.currentRoute.substr(1,menu.length) === menu) {
+          return ' active';
+        }
+        return '';
+      },
+    },
+  });
+</script>
 <style lang="scss">
   @import './styles/app.scss';
 </style>

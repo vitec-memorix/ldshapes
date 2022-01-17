@@ -1,6 +1,11 @@
 
 @import './_variables.scss';
-@import './form';
-
 // Then import Bootstrap an BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
+
+@import './icons';
+@import './main';
+@import './menu';
+@import './listview';
+@import './form';
+

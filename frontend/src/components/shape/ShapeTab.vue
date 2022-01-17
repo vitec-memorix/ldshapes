@@ -1,21 +1,20 @@
 <template>
-
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">id</label>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">id</label>
+        <div class="col-sm-10">
             <Field type="text" name="shape-id" :rules="validateAbsoluteIRI" v-model="shape.id" @input="saveValue('id', $event.target.value)" class="form-control" :placeholder="$t('iri')"/>
             <ErrorMessage name="shape-id" class="error-message" />
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">rdfs:label</label>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">rdfs:label</label>
+        <div class="col-sm-10">
             <input type="text" v-model="shape.label" @input="saveValue('label', $event.target.value)" class="form-control" :placeholder="$t('shape.label')" >
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">language</label>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">language</label>
+        <div class="col-sm-10">
             <select :value="shape.language" @input="saveValue('language', $event.target.value)" class="form-select" >
                 <option v-for="(language, index) in config.languages" :key="index" :value="language">
                     {{language}}
@@ -23,41 +22,30 @@
             </select>
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">dc:identifier</label>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">dc:identifier</label>
+        <div class="col-sm-10">
             <input type="text" v-model="shape.identifier" @input="saveValue('identifier', $event.target.value)" class="form-control" :placeholder="$t('shape.identifier')">
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">sh:targetClass</label>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">sh:targetClass</label>
+        <div class="col-sm-10">
             <input type="text" v-model="shape.targetClass" @input="saveValue('targetClass', $event.target.value)" class="form-control" :placeholder="$t('shape.target_class')">
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">rdf:type</label>
-            <div class="list-group border-top mb-2">
-                <div v-for="(data, index) in shape.type" :key="index" class="border-top-0 border p-2 pb-1 pt-1 bg-light">
-                    {{data}}
-                    <span class="btn btn-danger btn-sm bi-trash" v-if="data !== 'sh:NodeShape'" v-on:click="removeRow(index,'shape.type')"></span>
-                </div>
-            </div>
-
-            <select v-model="current_type" @change="savePicklist('type', $event.target.value)" class="form-select" >
-                <option value="">{{ $t('shape.pick_node') }}</option>
-                <option v-for="(type, index) in config.rdf_shape_classes" :key="index" :value="type" v-show="shape.type === undefined || (shape.type !== undefined && !shape.type.includes(type))">
-                    {{type}}
-                </option>
-            </select>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">rdfs:comment</label>
+        <div class="col-sm-10">
+            <textarea :value="shape.comment" @input="saveValue('comment', $event.target.value)" class="form-control" :placeholder="$t('shape.comment')"></textarea>
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-12">
-            <label class="form-label fw-bold">rdfs:comment</label>
-            <textarea :value="shape.comment" @input="saveValue('comment', $event.target.value)" class="form-control" :placeholder="$t('shape.comment')">
-            </textarea>
+    <div class="row mb-3">
+        <div class="col-sm-10 offset-sm-2">
+            <div class="form-check form-switch">
+                <input class="form-check-input" v-model="shape.memorixCompatible" @input="saveValue('memorixCompatible', $event.target.value)" type="checkbox" id="flexSwitchCheckDefault" :checked="shape.memorixCompatible === true">
+                <label class="form-check-label" for="flexSwitchCheckDefault">{{ $t('memorixCompatible') }}</label>
+            </div>
         </div>
     </div>
 </template>
@@ -93,24 +81,6 @@
       validateAbsoluteIRI,
       saveValue (index:string, newValue:any) {
         this.$emit('saveValue', 'shape', index, newValue)
-      },
-      savePicklist (index:string, newValue:any) {
-        if(newValue !== '') {
-          if(this.shape[index] === undefined) {
-            this.shape[index] = [];
-          }
-          this.shape[index].push(newValue);
-          this.$emit('saveValue', 'shape', index, this.shape[index])
-          this.current_type = '';
-        }
-      },
-      removeRow: function(index:any,object:any) {
-        var thisObject = (object).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
-        if(Number.isInteger(index)) {
-          thisObject.splice(index, 1);
-        } else {
-          delete thisObject[index];
-        }
       },
     },
   });
