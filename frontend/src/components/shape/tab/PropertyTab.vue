@@ -1,29 +1,19 @@
 <template>
-    <draggable class="dragArea list-property w-full m-2 mb-3" :list="property" handle=".handle">
-        <div v-for="(property, index) in value" :key="index" class="row border p-2">
+    <draggable class="dragArea list-property w-full m-2 mb-3" v-model="properties" handle=".handle">
+        <div v-for="(property, index) in properties" :key="index" class="row border p-2">
             <div class="form-property col-1 align-self-center">
                 <span class="btn btn-info btn-sm bi-arrows-move handle"></span>
             </div>
             <div class="form-property col-10">
                 <div class="row">
-                    <div class="form-property col-12">
-                        <label class="form-label fw-bold">rdfs:label</label>
-                        <div class="input-group">
-                            <div class="labelinput-container form-control">
-                                <span v-for="(label, propertyindex) in property.label" :key="propertyindex" class="labelinput rounded-3">
-                                    {{label.title}}:<span class="language">{{label.language}}</span> <span class="bi-x-lg" v-on:click="removeRow(propertyindex,'property.' + index + '.label')"></span>
-                                </span>
-                            </div>
-                            <button class="btn btn-primary pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsLabelModal"  @click="setModalField('settings.property.'+index+'.label')">Add</button>
-                        </div>
-                    </div>
+                    <label-field :field="'property.'+index+'.label'" :list="property.label" :inline="false" />
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">sh:path</label>
-                        <input type="text" :value="property.path" @input="saveValue('path',index, $event.target.value)" class="form-control" :placeholder="$t('iri')">
+                        <input type="text" v-model="property.path" class="form-control" :placeholder="$t('iri')">
                     </div>
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">sh:group</label>
-                        <select :value="property.group !== '' ? property.group : settings.group[0].id " @input="saveValue('group', index, $event.target.value)" class="form-select">
+                        <select v-model="property.group" class="form-select">
                             <option v-for="(group, index) in settings.group" :key="index" :value="group.id">
                                 {{ (group.label[0] !== undefined) ? group.label[0].title : 'Undefined' }}
                             </option>
@@ -33,81 +23,64 @@
                 <div class="row">
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">Property type</label>
-                        <select :value="property.property_type" @input="saveValue('property_type', index, $event.target.value)" class="form-select" >
-                            <option v-for="(property_type, index) in config.property_types" :key="index" :value="index">
+                        <select v-model="property.property_type" class="form-select" >
+                            <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">
                                 {{index}}
                             </option>
                         </select>
                     </div>
                     <div class="form-property col-6">
                         <label class="form-label fw-bold">{{$t('property.minCount')}}</label>
-                        <input type="number" :value="property.minCount" @input="saveValue('minCount',index, $event.target.value)" class="form-control" :placeholder="0">
+                        <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
                     </div>
                     <div class="form-property col-6">
                         <label class="form-label fw-bold">{{$t('property.maxCount')}}</label>
-                        <input type="number" :value="property.maxCount" @input="saveValue('maxCount',index, $event.target.value)" class="form-control" :placeholder="1">
+                        <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
                     </div>
                 </div>
             </div>
             <div class="form-property col-1 align-self-center">
-                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeRow(index,'property')"></span>
+                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('property',index)"></span>
             </div>
         </div>
     </draggable>
-    <button type="button" class="btn btn-info" v-on:click="addProperty()">{{ $t('property.add') }}</button>
+    <button type="button" class="btn btn-info" v-on:click="addSettingRow('property',{'id':'','label':[]})">{{ $t('property.add') }}</button>
 </template>
 <script lang="ts">
-  import {defineComponent} from "vue";
+  import {defineComponent, inject} from "vue";
+  import LabelField from '../field/LabelField.vue';
   import { VueDraggableNext } from 'vue-draggable-next'
-  import shapeConfig from '../../../../../resources/shapes/config.json';
   import sortNestedArray from "@/mixins/sortNestedArray";
+  import {addSettingRowKey, removeSettingRowKey} from "@/symbols/shape";
 
   export default defineComponent({
     components: {
       draggable: VueDraggableNext,
-    },
-    props: {
-      value: {
-        type: Object,
-        required: true
-      },
-      settings : {
-        type: Object,
-        required: true
-      }
+      LabelField
     },
     watch: {
-      value: function(newVal) {
-        sortNestedArray('order',newVal);
-        this.property = newVal;
-      }
+      settings: {
+        handler(newVal:any) {
+          sortNestedArray('order',newVal.property);
+          this.properties = newVal.property;
+        },
+        deep:true,
+      },
+    },
+    inject: ['settings','shapeConfig'],
+    setup() {
+      const addSettingRow = inject(addSettingRowKey);
+      const removeSettingRow = inject(removeSettingRowKey);
+
+      return {
+        addSettingRow,
+        removeSettingRow
+      };
     },
     data() {
       return {
-        property:this.value,
-        config: shapeConfig,
+        properties:[],
       }
-    },
-    emits: ['saveValue','setModalField'],
-    methods: {
-      saveValue (field:string, index:string, newValue:any) {
-        this.property[index][field] = newValue;
-        this.$emit('saveValue', 'property', index, this.property[index])
-      },
-      addProperty () {
-        this.$emit('saveValue', 'property', this.property.length, {});
-      },
-      removeRow: function(index:any,object:any) {
-        var thisObject = (object).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
-        if(Number.isInteger(index)) {
-          thisObject.splice(index, 1);
-        } else {
-          delete thisObject[index];
-        }
-      },
-      setModalField: function(field:string) {
-        this.$emit('setModalField', field);
-      },
     },
   });
 </script>

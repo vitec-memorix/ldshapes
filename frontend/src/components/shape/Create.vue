@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-sm-8 page-header">
-                <a href="/shape/pick">Shape creator</a> / {{settings.name}} <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
+                <a href="/shape/pick">Shape creator</a> / {{settingsObject.name}} <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
             </div>
             <div class="col-sm-4 text-end" v-show="getActiveTab() === 'shape' ">
                 <button class="btn btn-primary" @click="showValues">Test</button>
@@ -28,30 +28,30 @@
                 </ul>
                 <div class="tab-content p-2 border-start pb-5" id="myTabContent">
                     <div class="tab-pane fade show active" id="shape" role="tabpanel" aria-labelledby="shape-tab">
-                        <shape-tab :value="settings.shape" @setModalField="setCurrentModalField"/>
+                        <shape-tab/>
                     </div>
                     <div class="tab-pane fade" id="prefix" role="tabpanel" aria-labelledby="prefix-tab">
-                        <prefix-tab :value="settings.prefix" />
+                        <prefix-tab/>
                     </div>
                     <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
-                        <group-tab :value="settings.group" @setModalField="setCurrentModalField" />
+                        <group-tab/>
                     </div>
                     <div class="tab-pane fade" id="property" role="tabpanel" aria-labelledby="property-tab">
-                        <property-tab :value="settings.property" @setModalField="setCurrentModalField" :settings="settings"/>
+                        <property-tab/>
                         <div class="pt-3">
                             <button type="submit" class="btn btn-primary">{{ $t('save') }}</button>
                         </div>
                     </div>
                 </div>
-                <title-modal :value="settings.name" @saveValue="saveValue" :modal-title="$t('ChangeTitle')"/>
-                <label-modal @saveValue="addLabel" :title="$t('AddLabel')" :field="currentModalField"/>
+                <title-modal :title="$t('ChangeTitle')"/>
+                <label-modal :title="$t('AddLabel')"/>
             </Form>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import {defineComponent, provide, reactive} from 'vue'
   import axios from "axios";
   import { server } from "../../helper";
   import ShapeTab from './tab/ShapeTab.vue';
@@ -61,26 +61,109 @@
   import TitleModal from './modal/TitleModal.vue';
   import LabelModal from './modal/LabelModal.vue';
   import { Form } from 'vee-validate';
-  import shapeConfig from '../../../../resources/shapes/config.json';
+  import config from '../../../../resources/shapes/config.json';
 
-  const settings: any = {name:'', shape:{}, prefix:[], group:[], property:[]};
+  import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction } from "@/types/shape";
+  import { updateSettingFieldKey, addSettingRowKey, removeSettingRowKey } from "@/symbols/shape";
 
   export default defineComponent({
-    el: '#app',
+    name: 'ShapeCreate',
     components: {
-      ShapeTab, PrefixTab, GroupTab, PropertyTab, TitleModal, LabelModal, Form },
+      ShapeTab,
+      PrefixTab,
+      GroupTab,
+      PropertyTab,
+      TitleModal,
+      LabelModal,
+      Form },
     data() {
       return {
-        currentModalField:'',
         currentTab:'shape',
         optionalPrefixes: {},
         listPrefix: '',
-        config:shapeConfig,
-        settings: settings
       }
     },
     async created() {
-      this.settings = await this.fetchShapeSettings();
+      var settings = await this.fetchShapeSettings();
+      var fields = Object.keys(this.settingsObject);
+      for( const index in fields ) {
+        this.updateSettingField(fields[index],settings[fields[index]]);
+      }
+    },
+    setup() {
+
+      let generalConfig = reactive({
+        modalField:'',
+      });
+      let settingsObject = reactive({
+        name:'',
+        shape:{},
+        prefix:[],
+        group:[],
+        property:[]
+      });
+
+      const updateSettingField: UpdateSettingFieldFunction = function (field: string, value: any) {
+        var schema :any;
+        if(['modalField'].indexOf(field) > -1) {
+          schema = generalConfig;
+        } else {
+          schema = settingsObject;
+        }
+
+        var pList = field.split('.');
+        var len = pList.length;
+        for(var i = 0; i < len-1; i++) {
+          var elem = pList[i];
+          if( !schema[elem] ) schema[elem] = {}
+          schema = schema[elem];
+        }
+        schema[pList[len-1]] = value;
+      };
+
+      const addSettingRow: AddSettingRowFunction = function (field: string, row: any) {
+        var schema :any = settingsObject;
+        var pList = field.split('.');
+        var len = pList.length;
+        for(var i = 0; i < len-1; i++) {
+          var elem = pList[i];
+          if( !schema[elem] ) schema[elem] = {}
+          schema = schema[elem];
+        }
+        schema[pList[len-1]].push(row);
+      }
+
+      const removeSettingRow: RemoveSettingRowFunction = function (field: string, index: number) {
+        var schema :any = settingsObject;
+        var pList = field.split('.');
+        var len = pList.length;
+        for(var i = 0; i < len-1; i++) {
+          var elem = pList[i];
+          if( !schema[elem] ) schema[elem] = {}
+          schema = schema[elem];
+        }
+        if(Number.isInteger(index)) {
+          schema[pList[len-1]].splice(index, 1);
+        } else {
+          delete schema[pList[len-1]][index];
+        }
+      }
+
+      provide("settings", settingsObject);
+      provide("generalConfig", generalConfig);
+      provide("shapeConfig", config);
+      provide(updateSettingFieldKey, updateSettingField);
+      provide(addSettingRowKey, addSettingRow);
+      provide(removeSettingRowKey, removeSettingRow);
+
+      return {
+        settingsObject,
+        generalConfig,
+        updateSettingField,
+        addSettingRow,
+        removeSettingRow
+      };
+
     },
     methods: {
       async fetchShapeSettings() {
@@ -94,7 +177,7 @@
         });
       },
       onSubmit() {
-        axios.post(`${server.baseURL}/shape`, this.settings).then(response => {
+        axios.post(`${server.baseURL}/shape`, this.settingsObject).then(response => {
           if(response.data === 'saved') {
             alert('Shape is saved in resources folder');
           }
@@ -104,9 +187,7 @@
         sessionStorage.setItem('sourceShape', value);
         window.location.reload();
       },
-      setCurrentModalField(field:string) {
-        this.currentModalField = field;
-      },
+
       setCurrentTab(tab:string) {
         this.currentTab = tab;
       },
@@ -114,15 +195,8 @@
         return this.currentTab;
       },
       showValues() {
-        console.log(this.settings);
+        console.log(this.settingsObject);
       },
-      saveValue (field:any, newValue:any) {
-        this.settings[field] = newValue;
-      },
-      addLabel (field:any, newTitle:any, newLanguage:any) {
-        var thisObject = (field).split('.').reduce((p:any, c:any) => p && p[c] || null, this);
-        thisObject.push({'title':newTitle,'language':newLanguage});
-      }
     }
   });
 </script>

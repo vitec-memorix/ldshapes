@@ -44,7 +44,7 @@
   import { server } from "../../helper";
 
   export default defineComponent({
-    el: '#app',
+    name: 'ShapePickSource',
     data() {
       return {
         sourceShapes:[]
