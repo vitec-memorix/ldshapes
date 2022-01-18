@@ -59,6 +59,7 @@
   },
   "AddLabel": "Label toevoegen",
   "ChangeTitle": "Titel aanpassen",
+  "AddPrefix": "Prefix toevoegen",
   "language": {
     "Dutch" : "Nederlands",
     "English" : "Engels"

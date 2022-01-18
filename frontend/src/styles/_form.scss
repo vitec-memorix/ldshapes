@@ -7,16 +7,35 @@
     text-align:right;
   }
   .labelinput-container {
+    padding:0px 7px 5px 7px;
     .labelinput {
       background:$secondary;
       padding:5px 10px;
+      margin: 5px 0px 0px 5px;
+      display:inline-block;
       .language {
         text-transform: uppercase;
       }
-      &:not(:first-of-type) {
-        margin-left:10px;
+      &.readonly {
+        background:$grey;
+      }
+      .remove-record {
+        cursor:pointer;
+      }
+      &:after {
+        content:"";
+        display:block;
       }
     }
+  }
+
+  .small-form-label {
+    font-size:0.8em;
+    font-weight:normal;
+    padding-top:5px;
+    margin:0px;
+    padding-bottom:5px;
+    color:$dark-grey;
   }
 
 }

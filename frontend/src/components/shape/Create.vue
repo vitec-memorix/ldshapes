@@ -17,21 +17,18 @@
                         <button class="nav-link active" @click="setCurrentTab('shape')" id="shape-tab" data-bs-toggle="tab" data-bs-target="#shape" ref="shapeTab" type="button" role="tab" aria-controls="home" aria-selected="true">Shape</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="prefix-tab" @click="setCurrentTab('prefix')" data-bs-toggle="tab" data-bs-target="#prefix" ref="prefixTab" type="button" role="tab" aria-controls="prefix" aria-selected="false">Prefixes</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
                         <button class="nav-link" id="group-tab" @click="setCurrentTab('group')" data-bs-toggle="tab" data-bs-target="#group" ref="groupTab" type="button" role="tab" aria-controls="group" aria-selected="false">Groups</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="property-tab" @click="setCurrentTab('property')" data-bs-toggle="tab" data-bs-target="#property" ref="propertyTab" type="button" role="tab" aria-controls="property" aria-selected="false">Properties</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="prefix-tab" @click="setCurrentTab('prefix')" data-bs-toggle="tab" data-bs-target="#prefix" ref="prefixTab" type="button" role="tab" aria-controls="prefix" aria-selected="false">Prefixes</button>
+                    </li>
                 </ul>
                 <div class="tab-content p-2 border-start pb-5" id="myTabContent">
                     <div class="tab-pane fade show active" id="shape" role="tabpanel" aria-labelledby="shape-tab">
                         <shape-tab/>
-                    </div>
-                    <div class="tab-pane fade" id="prefix" role="tabpanel" aria-labelledby="prefix-tab">
-                        <prefix-tab/>
                     </div>
                     <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
                         <group-tab/>
@@ -42,9 +39,13 @@
                             <button type="submit" class="btn btn-primary">{{ $t('save') }}</button>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="prefix" role="tabpanel" aria-labelledby="prefix-tab">
+                        <prefix-tab/>
+                    </div>
                 </div>
                 <title-modal :title="$t('ChangeTitle')"/>
                 <label-modal :title="$t('AddLabel')"/>
+                <prefix-modal />
             </Form>
         </div>
     </div>
@@ -60,6 +61,7 @@
   import PropertyTab from './tab/PropertyTab.vue';
   import TitleModal from './modal/TitleModal.vue';
   import LabelModal from './modal/LabelModal.vue';
+  import PrefixModal from './modal/PrefixModal.vue';
   import { Form } from 'vee-validate';
   import config from '../../../../resources/shapes/config.json';
 
@@ -75,6 +77,7 @@
       PropertyTab,
       TitleModal,
       LabelModal,
+      PrefixModal,
       Form },
     data() {
       return {
