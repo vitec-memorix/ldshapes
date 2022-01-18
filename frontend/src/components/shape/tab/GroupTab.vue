@@ -7,13 +7,7 @@
             <div class="form-group col-10">
                 <div class="row">
                     <div class="form-group col-12">
-                        <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label">id</label>
-                            <div class="col-sm-10">
-                                <Field type="text" :name="'group-id-'+index" v-model="group.id" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
-                                <ErrorMessage :name="'group-id-'+index" class="error-message" />
-                            </div>
-                        </div>
+                        <id-field :field="'group.'+index+'.id'" :value="group.id" />
                         <label-field :field="'group.'+index+'.label'" :list="group.label" />
                     </div>
                 </div>
@@ -28,18 +22,16 @@
 <script lang="ts">
   import {defineComponent, inject} from "vue";
   import LabelField from '../field/LabelField.vue';
+  import IdField from '../field/IdField.vue';
   import { VueDraggableNext } from 'vue-draggable-next';
-  import {validateAbsoluteIRI, validatePrefix} from '@/mixins/validateShape';
-  import { ErrorMessage, Field } from 'vee-validate';
   import sortNestedArray from '@/mixins/sortNestedArray';
   import {addSettingRowKey, removeSettingRowKey} from "@/symbols/shape";
 
   export default defineComponent({
     components: {
       draggable: VueDraggableNext,
-      ErrorMessage,
-      Field,
-      LabelField
+      LabelField,
+      IdField,
     },
     watch: {
       settings: {
@@ -66,9 +58,6 @@
         addSettingRow,
         removeSettingRow
       };
-    },
-    methods: {
-      validateAbsoluteIRI,
     },
   });
 </script>

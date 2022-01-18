@@ -1,11 +1,5 @@
 <template>
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">id</label>
-        <div class="col-sm-10">
-            <Field type="text" name="shape-id" :rules="validateAbsoluteIRI" v-model="settings.shape.id" class="form-control" :placeholder="$t('iri')"/>
-            <ErrorMessage name="shape-id" class="error-message" />
-        </div>
-    </div>
+    <id-field field="shape.id" :value="settings.shape.id" />
     <label-field field="shape.label" :list="settings.shape.label" />
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">dc:identifier</label>
@@ -13,12 +7,7 @@
             <input type="text" v-model="settings.shape.identifier" class="form-control" :placeholder="$t('shape.identifier')">
         </div>
     </div>
-    <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">sh:targetClass</label>
-        <div class="col-sm-10">
-            <input type="text" v-model="settings.shape.targetClass" class="form-control" :placeholder="$t('shape.target_class')">
-        </div>
-    </div>
+    <id-field field="shape.targetClass" fieldName="sh:targetClass" :value="settings.shape.targetClass" />
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">rdfs:comment</label>
         <div class="col-sm-10">
@@ -38,14 +27,13 @@
 <script lang="ts">
   import {defineComponent} from "vue";
   import LabelField from '../field/LabelField.vue';
+  import IdField from '../field/IdField.vue';
   import { validateAbsoluteIRI } from '@/mixins/validateShape';
-  import { ErrorMessage, Field } from 'vee-validate';
 
   export default defineComponent({
     components: {
-      ErrorMessage,
-      Field,
-      LabelField
+      LabelField,
+      IdField
     },
     inject: ['settings'],
     methods: {

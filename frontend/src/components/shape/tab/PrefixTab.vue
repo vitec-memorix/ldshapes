@@ -14,10 +14,10 @@
                     {{ prefix.prefix }}
                 </div>
                 <div class="col-sm-7">
-                    &lt;{{ prefix.path }}&gt;
+                    &lt;{{ prefix.id }}&gt;
                 </div>
                 <div class="col-sm-3 pe-0 p-1 text-end">
-                    <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix.path)" v-on:click="removeSettingRow('prefix',index)"></span>
+                    <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix.id)" v-on:click="removeSettingRow('prefix',index)"></span>
                 </div>
             </div>
         </div>

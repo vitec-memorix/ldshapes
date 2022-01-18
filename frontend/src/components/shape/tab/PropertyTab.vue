@@ -7,10 +7,7 @@
             <div class="form-property col-10">
                 <div class="row">
                     <label-field :field="'property.'+index+'.label'" :list="property.label" :inline="false" />
-                    <div class="form-property col-12">
-                        <label class="form-label fw-bold">sh:path</label>
-                        <input type="text" v-model="property.path" class="form-control" :placeholder="$t('iri')">
-                    </div>
+                    <id-field :field="'property.'+index+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
                     <div class="form-property col-12">
                         <label class="form-label fw-bold">sh:group</label>
                         <select v-model="property.group" class="form-select">
@@ -49,6 +46,7 @@
 <script lang="ts">
   import {defineComponent, inject} from "vue";
   import LabelField from '../field/LabelField.vue';
+  import IdField from '../field/IdField.vue';
   import { VueDraggableNext } from 'vue-draggable-next'
   import sortNestedArray from "@/mixins/sortNestedArray";
   import {addSettingRowKey, removeSettingRowKey} from "@/symbols/shape";
@@ -56,7 +54,8 @@
   export default defineComponent({
     components: {
       draggable: VueDraggableNext,
-      LabelField
+      LabelField,
+      IdField
     },
     watch: {
       settings: {
