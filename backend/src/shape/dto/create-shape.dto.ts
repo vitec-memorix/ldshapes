@@ -7,6 +7,9 @@ class BaseShapeDto {
     this.id = bodyValue.id;
     this.label = bodyValue.label;
     this.order = bodyValue.order;
+    if(bodyValue.label === undefined) {
+      this.label = [];
+    }
   }
 }
 
@@ -27,14 +30,12 @@ export class CreateShapeDto {
 }
 
 export class ShapeDto extends BaseShapeDto {
-  language: string;
   identifier: string;
   targetClass: string;
   memorixCompatible: boolean;
   comment: string;
   constructor(bodyValue: any = {}) {
     super(bodyValue);
-    this.language = 'nl';
     this.identifier = bodyValue.identifier;
     this.targetClass = bodyValue.targetClass;
     this.memorixCompatible = bodyValue.memorixCompatible;

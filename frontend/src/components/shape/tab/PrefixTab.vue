@@ -14,7 +14,7 @@
                     {{ prefix.prefix }}
                 </div>
                 <div class="col-sm-7">
-                    &lt;{{ prefix.id }}&gt;
+                    {{ prefix.id }}
                 </div>
                 <div class="col-sm-3 pe-0 p-1 text-end">
                     <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix.id)" v-on:click="removeSettingRow('prefix',index)"></span>
@@ -47,7 +47,7 @@
     methods: {
       isDefaultPrefix(value:any) {
         return Object.values(this.shapeConfig.default_prefixes).includes(value);
-      },
+      }
     },
   });
 </script>
