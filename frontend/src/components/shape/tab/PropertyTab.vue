@@ -31,14 +31,14 @@
                                 <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
                             </div>
                             <div class="row">
-        <!--                        <div class="form-property col-12">-->
-        <!--                            <label class="form-label fw-bold">Property type</label>-->
-        <!--                            <select v-model="property.property_type" class="form-select" >-->
-        <!--                                <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">-->
-        <!--                                    {{property}}-->
-        <!--                                </option>-->
-        <!--                            </select>-->
-        <!--                        </div>-->
+                                <div class="form-property col-12">
+                                    <label class="form-label fw-bold">Property type</label>
+                                    <select v-model="property.property_type" class="form-select" >
+                                        <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">
+                                            {{index}}
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="form-property col-6">
                                     <label class="form-label fw-bold">{{$t('property.minCount')}}</label>
                                     <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
