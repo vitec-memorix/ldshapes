@@ -177,7 +177,6 @@ export class LoadShapeService {
             }
             break;
           case 'http://www.w3.org/2000/01/rdf-schema#label':
-            console.log(quads[key].object.value);
             shapeValues['label'].push({'title':quads[key].object.value,'language':quads[key].object.language});
             break;
           case 'http://www.w3.org/ns/shacl#maxCount':

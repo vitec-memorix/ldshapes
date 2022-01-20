@@ -22,7 +22,6 @@
             </div>
         </div>
     </div>
-<!--    <label-modal :value="shape.label" :title="$t('AddLabel')" field="label"/>-->
 </template>
 <script lang="ts">
   import {defineComponent} from "vue";
