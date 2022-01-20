@@ -41,7 +41,7 @@ export class GenerateShapeService {
     this.addShapeProperties();
 
     await this.writer.end((error, result) => {
-      fs.writeFile(self.fileService.getBasePath() + 'shapes/' + self.createShapeDto.shape.identifier + '.ttl', result, (err) => {
+      fs.writeFile(self.fileService.getBasePath() + 'shapes/' + self.createShapeDto.name + '.ttl', result, (err) => {
         // throws an error, you could also catch it here
         if (err) throw err;
       });
@@ -58,12 +58,16 @@ export class GenerateShapeService {
         self.prefixes['sh'] + 'PropertyGroup',
         group.id,
       );
-      self.addLiteral(
-        self.prefixes['rdfs'] + 'label',
-        group.label,
-        self.createShapeDto.shape.language,
-        group.id,
-      );
+
+      group.label.forEach(function (label) {
+        self.addLiteral(
+          self.prefixes['rdfs'] + 'label',
+          label.title,
+          label.language,
+          group.id,
+        );
+      });
+
       self.addLiteral(
         self.prefixes['sh'] + 'order',
         self.ordering.toFixed(1),
@@ -98,11 +102,13 @@ export class GenerateShapeService {
       self.writer.list([namedNode(this.prefixes['rdf'] + 'type')]),
     );
 
-    this.addLiteral(
-      this.prefixes['rdfs'] + 'label',
-      this.createShapeDto.shape.label,
-      this.createShapeDto.shape.language,
-    );
+    this.createShapeDto.shape.label.forEach(function (label) {
+      self.addLiteral(
+        self.prefixes['rdfs'] + 'label',
+        label.title,
+        label.language,
+      );
+    });
 
     this.addLiteral(
       this.prefixes['rdfs'] + 'comment',
@@ -127,10 +133,6 @@ export class GenerateShapeService {
           object: namedNode(property.path),
         },
         {
-          predicate: namedNode(self.prefixes['rdfs'] + 'label'),
-          object: literal(property.label, self.createShapeDto.shape.language),
-        },
-        {
           predicate: namedNode(self.prefixes['sh'] + 'order'),
           object: literal(
             self.ordering.toFixed(1),
@@ -138,6 +140,13 @@ export class GenerateShapeService {
           ),
         },
       ];
+      //add labels
+      property.label.forEach(function (label) {
+        options.push({
+          predicate: namedNode(self.prefixes['rdfs'] + 'label'),
+          object: literal(label.title, label.language),
+        });
+      });
 
       //add group
       for (const key in self.createShapeDto.group) {

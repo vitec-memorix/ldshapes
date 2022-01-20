@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>{{ msg }}</h1>
-    <img alt="LDShapes logo" src="../../public/images/ldshapes-logo-light.png" class="logo">
+    <img alt="LDShapes logo" src="../../public/images/ldshapes-blue.svg" class="logo">
   </div>
 </template>
 

@@ -56,5 +56,16 @@
     "absoluteIri": "Dit is geen geldige IRI",
     "required": "Dit veld is verplicht",
     "prefix": "Dit is geen geldige prefix"
+  },
+  "AddLabel": "Label toevoegen",
+  "ChangeTitle": "Titel aanpassen",
+  "AddPrefix": "Prefix toevoegen",
+  "language": {
+    "Dutch" : "Nederlands",
+    "English" : "Engels"
+  },
+  "button" : {
+    "add" : "Toevoegen",
+    "cancel" : "Annuleren"
   }
 }
