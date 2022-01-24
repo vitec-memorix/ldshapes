@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateShapeDto } from './../dto/create-shape.dto';
-import { ShapeService } from '../shape.service';
 import { FileService } from '../../file/file.service';
-import transformString from './../../shared/transformString';
 
 const shapeConfig = require('./../../../../resources/shapes/config.json');
 const N3 = require('n3');
@@ -41,10 +39,17 @@ export class GenerateShapeService {
     this.addShapeProperties();
 
     await this.writer.end((error, result) => {
-      fs.writeFile(self.fileService.getBasePath() + 'shapes/' + self.createShapeDto.name + '.ttl', result, (err) => {
-        // throws an error, you could also catch it here
-        if (err) throw err;
-      });
+      fs.writeFile(
+        self.fileService.getBasePath() +
+          'shapes/' +
+          self.createShapeDto.name +
+          '.ttl',
+        result,
+        (err) => {
+          // throws an error, you could also catch it here
+          if (err) throw err;
+        },
+      );
     });
     // success case, the file was saved
     return 'saved';
@@ -81,9 +86,15 @@ export class GenerateShapeService {
   async addShape() {
     const self = this;
 
-    self.addNamedNode(self.prefixes['rdf'] + 'type', 'http://www.w3.org/ns/shacl#NodeShape');
-    if(self.createShapeDto.shape.memorixCompatible === true) {
-      self.addNamedNode(self.prefixes['rdf'] + 'type', 'http://memorix.io/ontology#Recordtype');
+    self.addNamedNode(
+      self.prefixes['rdf'] + 'type',
+      'http://www.w3.org/ns/shacl#NodeShape',
+    );
+    if (self.createShapeDto.shape.memorixCompatible === true) {
+      self.addNamedNode(
+        self.prefixes['rdf'] + 'type',
+        'http://memorix.io/ontology#Recordtype',
+      );
     }
 
     this.addNamedNode(
@@ -158,10 +169,17 @@ export class GenerateShapeService {
         }
       }
       //add field specifics
-      for(var key in shapeConfig.property_types[property.property_type]) {
-        var object = namedNode(shapeConfig.property_types[property.property_type][key]);
-        if(typeof shapeConfig.property_types[property.property_type][key] === 'boolean') {
-          object = literal(shapeConfig.property_types[property.property_type][key]);
+      for (const key in shapeConfig.property_types[property.property_type]) {
+        let object = namedNode(
+          shapeConfig.property_types[property.property_type][key],
+        );
+        if (
+          typeof shapeConfig.property_types[property.property_type][key] ===
+          'boolean'
+        ) {
+          object = literal(
+            shapeConfig.property_types[property.property_type][key],
+          );
         }
         options.push({
           predicate: namedNode(key),
@@ -170,18 +188,18 @@ export class GenerateShapeService {
       }
 
       //add minCount
-      if(property.minCount !== undefined && property.minCount !== '') {
+      if (property.minCount !== undefined && property.minCount !== '') {
         options.push({
           predicate: namedNode(self.prefixes['sh'] + 'minCount'),
           object: literal(property.minCount),
-        })
+        });
       }
       //add max count
-      if(property.maxCount !== undefined && property.maxCount !== '') {
+      if (property.maxCount !== undefined && property.maxCount !== '') {
         options.push({
           predicate: namedNode(self.prefixes['sh'] + 'maxCount'),
           object: literal(property.maxCount),
-        })
+        });
       }
 
       self.writer.addQuad(
@@ -209,7 +227,7 @@ export class GenerateShapeService {
 
     // console.log(this.createShapeDto.prefix);
     //add the prefixes for the schema itself.
-    this.createShapeDto.prefix.forEach(function(row){
+    this.createShapeDto.prefix.forEach(function (row) {
       self.prefixes[row.prefix] = row.id;
     });
     return this.prefixes;
