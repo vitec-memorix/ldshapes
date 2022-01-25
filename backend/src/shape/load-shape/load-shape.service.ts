@@ -22,7 +22,7 @@ export class LoadShapeService {
   async create(file) {
     const shapeContent = await this.readShape(file);
 
-    this.shapeDto.name = file.replace(/\.[^/.]+$/, "");
+    this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
 
     this.setPrefixes(shapeContent['prefixes']);
 
@@ -35,7 +35,6 @@ export class LoadShapeService {
     this.setGroups(shapeContent['quads'], parents['group']);
     this.setProperies(shapeContent['quads'], parents['property']);
 
-    // console.log(this.shapeDto);
     return this.shapeDto;
   }
   readShape(file) {
@@ -46,7 +45,6 @@ export class LoadShapeService {
 
     return new Promise((resolve, reject) => {
       const quads = [];
-      const prefixes = [];
       parser.parse(rdfStream, (error, quad, prefix) => {
         if (error) {
           reject(error);
@@ -125,11 +123,9 @@ export class LoadShapeService {
   }
   setProperies(quads, properties) {
     for (const key in properties) {
-      let value = this.getQuadOptions(quads, properties[key]);
+      const value = this.getQuadOptions(quads, properties[key]);
       value['property_type'] = this.getPropertyType(quads, value['id']);
-      this.shapeDto.property.push(
-        new PropertyDto(value),
-      );
+      this.shapeDto.property.push(new PropertyDto(value));
     }
   }
 
@@ -140,19 +136,21 @@ export class LoadShapeService {
 
     for (const key in quads) {
       if (quads[key].subject.value === id) {
-        if(quads[key].predicate.value == 'http://datashapes.org/dash#editor') {
+        if (quads[key].predicate.value == 'http://datashapes.org/dash#editor') {
           editor = quads[key].object.value;
-        } else if (quads[key].predicate.value == 'http://www.w3.org/ns/shacl#datatype') {
+        } else if (
+          quads[key].predicate.value == 'http://www.w3.org/ns/shacl#datatype'
+        ) {
           datatype = quads[key].object.value;
         }
       }
     }
 
     //check which type of field it is. if it's a string. It's a text field.
-    if(datatype === 'http://www.w3.org/2001/XMLSchema#string') {
+    if (datatype === 'http://www.w3.org/2001/XMLSchema#string') {
       property_type = 'text';
       //if it is a textarea editor it's a textarea field.
-      if(editor === 'http://datashapes.org/dash#TextAreaEditor') {
+      if (editor === 'http://datashapes.org/dash#TextAreaEditor') {
         property_type = 'textarea';
       }
     }
@@ -172,19 +170,27 @@ export class LoadShapeService {
       if (quads[key].subject.value === parent) {
         switch (quads[key].predicate.value) {
           case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type':
-            if(quads[key].object.value === 'http://memorix.io/ontology#Recordtype') {
+            if (
+              quads[key].object.value ===
+              'http://memorix.io/ontology#Recordtype'
+            ) {
               shapeValues['memorixCompatible'] = true;
             }
             break;
           case 'http://www.w3.org/2000/01/rdf-schema#label':
-            shapeValues['label'].push({'title':quads[key].object.value,'language':quads[key].object.language});
+            shapeValues['label'].push({
+              title: quads[key].object.value,
+              language: quads[key].object.language,
+            });
             break;
           case 'http://www.w3.org/ns/shacl#maxCount':
           case 'http://www.w3.org/ns/shacl#minCount':
           case 'http://www.w3.org/ns/shacl#order':
           case 'http://purl.org/dc/elements/1.1/identifier':
           case 'http://www.w3.org/2000/01/rdf-schema#comment':
-            index = quads[key].predicate.value.substr(this.getPrefixUrl(quads[key].predicate.value).length);
+            index = quads[key].predicate.value.substr(
+              this.getPrefixUrl(quads[key].predicate.value).length,
+            );
             value = quads[key].object.value;
             if (quads[key].object.datatype !== undefined) {
               switch (quads[key].object.datatype.value) {
@@ -202,14 +208,12 @@ export class LoadShapeService {
           case 'http://www.w3.org/ns/shacl#class':
           case 'http://www.w3.org/ns/shacl#path':
           case 'http://www.w3.org/ns/shacl#targetClass':
-            index = quads[key].predicate.value.substr(this.getPrefixUrl(quads[key].predicate.value).length);
-            shapeValues[index] = this.fixupLocalUrl(
-              quads[key].object.value,
+            index = quads[key].predicate.value.substr(
+              this.getPrefixUrl(quads[key].predicate.value).length,
             );
+            shapeValues[index] = this.fixupLocalUrl(quads[key].object.value);
             break;
           default:
-            // console.log(quads[key].object.value);
-            // console.log(quads[key].predicate.value+' - '+quads[key].predicate.value.substr(this.getPrefixUrl(quads[key].predicate.value).length));
             break;
         }
       }

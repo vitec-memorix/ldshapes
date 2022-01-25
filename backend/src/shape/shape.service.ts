@@ -6,26 +6,25 @@ import { FileService } from '../file/file.service';
 
 @Injectable()
 export class ShapeService {
-  constructor(private readonly generateShapeService: GenerateShapeService) {
-
-  }
+  constructor(
+    private readonly generateShapeService: GenerateShapeService,
+    private readonly loadShapeService: LoadShapeService,
+    private readonly fileService: FileService,
+  ) {}
 
   createShape(createShapeDto: CreateShapeDto) {
     return this.generateShapeService.create(createShapeDto);
   }
 
   async getAllShapeFiles() {
-    const fileService = new FileService();
-    return await fileService.GetFileListing('shapes');
+    return await this.fileService.GetFileListing('shapes');
   }
 
   async loadShape(file) {
-    // const tmp = new CreateShapeDto();
     if (file === 'new') {
-      console.log(new CreateShapeDto());
       return new CreateShapeDto();
     }
-    const loadShapeService = new LoadShapeService();
-    return await loadShapeService.create(file);
+
+    return await this.loadShapeService.create(file);
   }
 }

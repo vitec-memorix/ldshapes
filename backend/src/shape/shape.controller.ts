@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ShapeService } from './shape.service';
 import { CreateShapeDto } from './dto/create-shape.dto';
-
 
 @Controller('shape')
 export class ShapeController {

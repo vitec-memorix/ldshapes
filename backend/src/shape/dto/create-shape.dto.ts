@@ -7,7 +7,7 @@ class BaseShapeDto {
     this.id = bodyValue.id;
     this.label = bodyValue.label;
     this.order = bodyValue.order;
-    if(bodyValue.label === undefined) {
+    if (bodyValue.label === undefined) {
       this.label = [];
     }
   }
