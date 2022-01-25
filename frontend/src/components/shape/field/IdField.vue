@@ -3,15 +3,21 @@
         <label :class="inline === true ? 'col-sm-2 col-form-label' : 'form-label small-form-label'" >
             {{fieldName}}
         </label>
-        <div :class="inline === true ? 'col-sm-10' : ''">
-            <Field type="text" :name="'idfield_'+field" v-model="field_value" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
+        <div class="position-relative" :class="inline === true ? 'col-sm-10' : ''">
+            <Field type="text" :name="'idfield_'+field" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
             <ErrorMessage :name="'idfield_'+field" class="error-message" />
+            <span v-if="savedPrefix" :id="'add-prefix-warning-'+field" class="bg-success text-white prefix-warning">{{ $t('AddedPrefix') }}</span>
+            <div v-if="!checkForValidPrefixes()" class="mt-2">
+                {{ $t('prefixNotFound') }}
+                <button class="btn btn-light btn-outline-dark btn-sm" type="button" data-bs-toggle="modal" @click="updateSettingField('prefixId',prefixId)" data-bs-target="#rdfsPrefixModal">Add prefix</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
   import { defineComponent, inject } from 'vue';
+  import axios from "axios";
   import {validateAbsoluteIRI} from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
   import {updateSettingFieldKey} from "@/symbols/shape";
@@ -39,10 +45,13 @@
         default: true
       }
     },
-    inject: ['settings'],
     data() {
+      const prefixesCC: { [key: string]: any[] } = {};
       return {
         field_value:this.value,
+        prefixesCC,
+        prefixId:'',
+        savedPrefix:false,
       }
     },
     watch: {
@@ -60,16 +69,71 @@
         deep:true,
       },
     },
+    mounted() {
+      this.setPrefixes();
+    },
     setup() {
+      const settings :any = inject('settings');
       const updateSettingField = inject(updateSettingFieldKey);
 
       return {
         updateSettingField,
+        settings,
       };
     },
     methods: {
       validateAbsoluteIRI,
+      checkForValidPrefixes() {
+        if(this.field_value !== undefined) {
+          const matches: string[]|null = this.field_value.match(/^([a-z][a-z0-9]+):[a-zA-Z]/);
+          // if there is a shorthand code.
+          if(matches !== null && matches[1] !== undefined) {
+            var prefixFound = false;
+            this.prefixId = matches[1];
+            //Check if the prefix is already set.
+            if(this.settings.prefix !== undefined) {
+              this.settings.prefix.forEach(function(prefix :any){
+                if(prefix['prefix'] === matches[1]) {
+                  prefixFound = true;
+                }
+              })
+              //if no prefix is found. Check if the prefix is set on prefix.cc
+              //add automatically
+              if(prefixFound === false && this.prefixesCC[matches[1]] !== undefined) {
+                this.settings.prefix.push({
+                  id:this.prefixesCC[matches[1]],
+                  prefix:matches[1]
+                })
+                this.showAddPrefix();
+                prefixFound = true;
+              }
 
+              //if still not found. Show add prefix message.
+              return prefixFound;
+            }
+          }
+        }
+        //if we are still here. Don't show the warning.
+        return true;
+      },
+      setPrefixes: function() {
+        if(localStorage.getItem('prefixContext') !== null) {
+          const prefixes :any = localStorage.getItem('prefixContext');
+          this.prefixesCC = JSON.parse(prefixes);
+        } else {
+          axios.get('https://prefix.cc/context')
+            .then(response => {
+              this.prefixesCC = response.data['@context'];
+              localStorage.setItem('prefixContext', JSON.stringify(this.prefixesCC));
+            })
+        }
+      },
+      showAddPrefix: function() {
+        this.savedPrefix = true;
+        setTimeout(()=>{
+          this.savedPrefix = false;
+        },1000)
+      }
     },
   });
 </script>

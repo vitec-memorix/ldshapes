@@ -21,10 +21,6 @@ export class ShapeService {
   }
 
   async loadShape(file) {
-    if (file === 'new') {
-      return new CreateShapeDto();
-    }
-
     return await this.loadShapeService.create(file);
   }
 }

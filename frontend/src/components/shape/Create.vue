@@ -89,6 +89,7 @@
 
       let generalConfig = reactive({
         modalField:'',
+        prefixId:'',
       });
       let settingsObject = reactive({
         name:'',
@@ -100,7 +101,7 @@
 
       const updateSettingField: UpdateSettingFieldFunction = function (field: string, value: any) {
         var schema :any;
-        if(['modalField'].indexOf(field) > -1) {
+        if(['modalField','prefixId'].indexOf(field) > -1) {
           schema = generalConfig;
         } else {
           schema = settingsObject;

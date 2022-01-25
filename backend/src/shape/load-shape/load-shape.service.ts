@@ -8,6 +8,7 @@ import {
 } from '../dto/create-shape.dto';
 import { FileService } from '../../file/file.service';
 import { GenerateShapeService } from '../generate-shape/generate-shape.service';
+const shapeConfig = require('./../../../../resources/shapes/config.json');
 const N3 = require('n3');
 const { DataFactory } = N3;
 const fs = require('fs');
@@ -20,21 +21,27 @@ export class LoadShapeService {
   shapeDto = new CreateShapeDto();
 
   async create(file) {
-    const shapeContent = await this.readShape(file);
+    this.shapeDto = new CreateShapeDto();
+    if (file === 'new') {
+      this.shapeDto.name = 'New shape';
+      this.setPrefixes({});
+    } else {
+      const shapeContent = await this.readShape(file);
 
-    this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
+      this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
 
-    this.setPrefixes(shapeContent['prefixes']);
 
-    const parents = this.getShapeParents(shapeContent['quads']);
+      const parents = this.getShapeParents(shapeContent['quads']);
 
-    this.shapeDto.shape = new ShapeDto(
-      this.getQuadOptions(shapeContent['quads'], parents['shape']),
-    );
+      this.shapeDto.shape = new ShapeDto(
+        this.getQuadOptions(shapeContent['quads'], parents['shape']),
+      );
 
-    this.setGroups(shapeContent['quads'], parents['group']);
-    this.setProperies(shapeContent['quads'], parents['property']);
+      this.setGroups(shapeContent['quads'], parents['group']);
+      this.setProperies(shapeContent['quads'], parents['property']);
+      this.setPrefixes(shapeContent['prefixes']);
 
+    }
     return this.shapeDto;
   }
   readShape(file) {
@@ -67,6 +74,14 @@ export class LoadShapeService {
       this.shapeDto.prefix.push(
         new PrefixDto({ id: this.fixupLocalUrl(prefixes[key]), prefix: key }),
       );
+    }
+    //for all "default" prefixes set in the config not present in the prefixes. Always add them.
+    for (const key in shapeConfig.default_prefixes) {
+      if(prefixes[key] === undefined) {
+        this.shapeDto.prefix.push(
+          new PrefixDto({ id: shapeConfig.default_prefixes[key], prefix: key }),
+        );
+      }
     }
   }
 
