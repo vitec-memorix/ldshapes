@@ -5,13 +5,12 @@
                 <a href="/shape/pick">Shape creator</a> / {{settingsObject.name}} <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
             </div>
             <div class="col-sm-4 text-end" v-show="getActiveTab() === 'shape' ">
-                <button class="btn btn-primary" @click="showValues">Test</button>
-                <button class="btn btn-primary" @click="chooseAndRedirect('')"><span class="bi-plus-lg"></span> {{ $t('beginNewShape') }}</button>
+                <button class="btn btn-primary" @click="onSubmit">{{ $t('save') }}</button>
                 <button class="btn btn-primary disabled ms-3" disabled="true"><span class="bi-upload"></span> Import</button>
             </div>
         </div>
         <div class="col-md-12 form-wrapper">
-            <Form id="app" @submit="onSubmit">
+            <Form id="app">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" @click="setCurrentTab('shape')" id="shape-tab" data-bs-toggle="tab" data-bs-target="#shape" ref="shapeTab" type="button" role="tab" aria-controls="home" aria-selected="true">Shape</button>
@@ -30,7 +29,6 @@
                     <div class="tab-pane fade" id="property" role="tabpanel" aria-labelledby="property-tab">
                         <property-tab/>
                         <div class="pt-3">
-                            <button type="submit" class="btn btn-primary">{{ $t('save') }}</button>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="prefix" role="tabpanel" aria-labelledby="prefix-tab">
@@ -172,7 +170,6 @@
         addSettingRow,
         removeSettingRow
       };
-
     },
     methods: {
       async fetchShapeSettings() {
@@ -202,9 +199,6 @@
       },
       getActiveTab() :string {
         return this.currentTab;
-      },
-      showValues() {
-        console.log(this.settingsObject);
       },
     }
   });
