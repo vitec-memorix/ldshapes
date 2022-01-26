@@ -62,6 +62,7 @@
   "AddPrefix": "Prefix toevoegen",
   "AddedPrefix": "Prefix toegevoegd",
   "prefixNotFound": "Deze prefix is niet gevonden",
+  "shapeIdRequired": "Om properties toe te voegen is een geldig id van de shape verplicht.",
   "language": {
     "Dutch" : "Nederlands",
     "English" : "Engels"

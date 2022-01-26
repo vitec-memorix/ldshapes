@@ -16,6 +16,7 @@ const fs = require('fs');
 @Injectable()
 export class LoadShapeService {
   prefixes = {};
+  prefixesById = {};
   shapeParents = {};
   quads;
   shapeDto = new CreateShapeDto();
@@ -29,7 +30,7 @@ export class LoadShapeService {
       const shapeContent = await this.readShape(file);
 
       this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
-
+      this.setPrefixes(shapeContent['prefixes']);
 
       const parents = this.getShapeParents(shapeContent['quads']);
 
@@ -37,9 +38,11 @@ export class LoadShapeService {
         this.getQuadOptions(shapeContent['quads'], parents['shape']),
       );
 
+      //if there is no "self" prefix. Add it based on the shape id.
+      this.addSelfPrefix();
+
       this.setGroups(shapeContent['quads'], parents['group']);
       this.setProperies(shapeContent['quads'], parents['property']);
-      this.setPrefixes(shapeContent['prefixes']);
 
     }
     return this.shapeDto;
@@ -68,9 +71,11 @@ export class LoadShapeService {
 
   setPrefixes(prefixes) {
     this.prefixes = {};
+    this.prefixesById = {};
     this.shapeDto.prefix = [];
     for (const key in prefixes) {
       this.prefixes[this.fixupLocalUrl(prefixes[key])] = key;
+      this.prefixesById[key] = this.fixupLocalUrl(prefixes[key]);
       this.shapeDto.prefix.push(
         new PrefixDto({ id: this.fixupLocalUrl(prefixes[key]), prefix: key }),
       );
@@ -175,8 +180,7 @@ export class LoadShapeService {
 
   getQuadOptions(quads, parent) {
     const shapeValues = {};
-
-    shapeValues['id'] = this.fixupLocalUrl(parent);
+    shapeValues['id'] = parent;
     shapeValues['memorixCompatible'] = false;
     shapeValues['label'] = [];
     let index = '';
@@ -235,22 +239,24 @@ export class LoadShapeService {
     }
     return shapeValues;
   }
+  addSelfPrefix() {
+    let selfPrefixExists = false;
+    Object.keys(this.shapeDto.prefix).forEach(value => {
+      if(value['prefix'] === '') {
+        selfPrefixExists = true;
+      }
+    });
+    if(!selfPrefixExists) {
+      this.shapeDto.prefix.push({
+        id:new URL(this.shapeDto.shape.id + '#'),
+        prefix:'',
+      });
+    }
+  }
 
   fixupLocalUrl(url) {
     if (url.substring(0, 10) === 'undefined/') {
       url = url.substring(9);
-    }
-    return url;
-  }
-
-  getShorthand(url) {
-    const prefixUrl = this.getPrefixUrl(url);
-    if (this.prefixes[this.getPrefixUrl(url)]) {
-      return (
-        this.prefixes[this.getPrefixUrl(url)] +
-        ':' +
-        url.substr(this.getPrefixUrl(url).length)
-      );
     }
     return url;
   }

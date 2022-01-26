@@ -58,8 +58,8 @@
   import { Form } from 'vee-validate';
   import config from '../../../../resources/shapes/config.json';
 
-  import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction } from "@/types/shape";
-  import { updateSettingFieldKey, addSettingRowKey, removeSettingRowKey } from "@/symbols/shape";
+  import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction, GetFullIriFunction } from "@/types/shape";
+  import { updateSettingFieldKey, addSettingRowKey, removeSettingRowKey, getFullIriKey } from "@/symbols/shape";
 
   export default defineComponent({
     name: 'ShapeCreate',
@@ -145,12 +145,25 @@
         }
       }
 
+      const getFullIri: GetFullIriFunction = function (iri :string) {
+        const matches: string[]|null = iri.match(/^([a-z][a-z0-9]+):([a-zA-Z].*)/);
+        if(matches !== null && matches[1] !== undefined && matches[2] !== undefined) {
+          settingsObject.prefix.forEach(function(value :any){
+            if(matches[1] === value['prefix']) {
+              iri = value['id'] + matches[2];
+            }
+          })
+        }
+        return iri;
+      }
+
       provide("settings", settingsObject);
       provide("generalConfig", generalConfig);
       provide("shapeConfig", config);
       provide(updateSettingFieldKey, updateSettingField);
       provide(addSettingRowKey, addSettingRow);
       provide(removeSettingRowKey, removeSettingRow);
+      provide(getFullIriKey, getFullIri);
 
       return {
         settingsObject,

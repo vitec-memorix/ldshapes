@@ -4,7 +4,7 @@
             {{fieldName}}
         </label>
         <div class="position-relative" :class="inline === true ? 'col-sm-10' : ''">
-            <Field type="text" :name="'idfield_'+field" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
+            <Field type="text" :name="'idfield_'+field" @focus="saveOldId" @blur="addSelfPrefixById" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
             <ErrorMessage :name="'idfield_'+field" class="error-message" />
             <span v-if="savedPrefix" :id="'add-prefix-warning-'+field" class="bg-success text-white prefix-warning">{{ $t('AddedPrefix') }}</span>
             <div v-if="!checkForValidPrefixes()" class="mt-2">
@@ -20,7 +20,7 @@
   import axios from "axios";
   import {validateAbsoluteIRI} from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
-  import {updateSettingFieldKey} from "@/symbols/shape";
+  import {updateSettingFieldKey, getFullIriKey} from "@/symbols/shape";
 
   export default defineComponent({
     name: 'IdField',
@@ -52,6 +52,7 @@
         prefixesCC,
         prefixId:'',
         savedPrefix:false,
+        oldId:'',
       }
     },
     watch: {
@@ -64,20 +65,29 @@
             if( !newVal[elem] ) newVal[elem] = {}
             newVal = newVal[elem];
           }
-          this.field_value = newVal[pList[len-1]];
+          this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
         },
         deep:true,
       },
     },
     mounted() {
       this.setPrefixes();
+      if(this.field_value !== undefined) {
+        this.field_value = this.getShorthandFromFullUrl(this.field_value);
+      }
     },
     setup() {
       const settings :any = inject('settings');
       const updateSettingField = inject(updateSettingFieldKey);
+      const getFullIri = inject(getFullIriKey);
+
+      if (getFullIri === undefined) {
+        throw new Error('Failed to inject function');
+      }
 
       return {
         updateSettingField,
+        getFullIri,
         settings,
       };
     },
@@ -133,7 +143,52 @@
         setTimeout(()=>{
           this.savedPrefix = false;
         },1000)
-      }
+      },
+      saveOldId() {
+        if (this.field === 'shape.id') {
+          this.oldId = this.getFullIri(this.settings.shape.id);
+        }
+      },
+      addSelfPrefixById() {
+        if (this.field === 'shape.id') {
+          let selfPrefixExists = false;
+          var fullUrl = this.getFullIri(this.settings.shape.id);
+          Object.keys(this.settings.prefix).forEach(key => {
+            if(this.settings.prefix[key]['prefix'] === '') {
+              selfPrefixExists = true;
+              this.settings.prefix[key]['id'] = fullUrl + '#';
+            }
+            if(this.oldId !== '' && this.settings.prefix[key]['id'].substr(0,this.oldId.length) === this.oldId) {
+              //if the id changes. Change the prefix set for self (named) also.
+              this.settings.prefix[key]['id'] = fullUrl + '#';
+            }
+          });
+          if(!selfPrefixExists) {
+            this.settings.prefix.push({
+              'prefix':'',
+              'id':fullUrl + '#'
+            });
+          }
+        }
+      },
+      getShorthandFromFullUrl(url :string) {
+        let newUrl = url;
+        console.log('---------');
+        console.log( url );
+        let prevPrefix = '';
+        let prevLength = 0;
+        Object.keys(this.settings.prefix).forEach(key => {
+          const id = this.settings.prefix[key]['id'];
+          const prefix = this.settings.prefix[key]['prefix'];
+          if(id === url.substr(0,id.length) && (prevPrefix === '' || id.length > prevLength)) {
+            console.log(id);
+            newUrl = prefix + ':' + url.substr(id.length);
+            prevPrefix = prefix;
+            prevLength = id.length;
+          }
+        });
+        return newUrl;
+      },
     },
   });
 </script>

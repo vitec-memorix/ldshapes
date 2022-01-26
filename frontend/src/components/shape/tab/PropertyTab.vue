@@ -1,68 +1,74 @@
 <template>
-    <draggable class="dragArea list-group w-full m-2 mb-3" v-model="groups" handle=".grouphandle" @sort="reorderGroups">
-        <div v-for="(group, groupindex) in groups" :key="groupindex" class="row border p-2">
-            <div class="form-group col-1 align-self-center">
-                <span class="btn btn-info btn-sm bi-arrows-move grouphandle"></span>
-            </div>
-            <div class="form-group col-10">
-                <div class="row">
-                    <div class="form-group col-12">
-                        <label-field :field="'group.'+groupindex+'.label'" :list="group.label" field-name="Groupname" :inline="false" />
+    <div v-if="!isShapeIdValid()">
+        {{ $t('shapeIdRequired') }}
+    </div>
+    <div v-if="isShapeIdValid()">
+        <draggable class="dragArea list-group w-full m-2 mb-3" v-model="groups" handle=".grouphandle" @sort="reorderGroups">
+            <div v-for="(group, groupindex) in groups" :key="groupindex" class="row border p-2">
+                <div class="form-group col-1 align-self-center">
+                    <span class="btn btn-info btn-sm bi-arrows-move grouphandle"></span>
+                </div>
+                <div class="form-group col-10">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label-field :field="'group.'+groupindex+'.label'" :list="group.label" field-name="Groupname" :inline="false" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-1 align-self-center">
-                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('group',groupindex)"></span>
-            </div>
-            <draggable class="dragArea list-property w-full m-2 mb-3"
-                       :list="propertiesByGroup[group.id]"
-                       group="people"
-                       @change="log(group.id, $event)"
-                       itemKey="order"
-                       handle=".properyhandle" @sort="reorderProperties(group.id)">
-                <div v-for="(property, propertyindex) in propertiesByGroup[group.id]" :key="propertyindex" class="row border p-2">
-                        <div class="form-property col-1 align-self-center">
-                            <span class="btn btn-info btn-sm bi-arrows-move properyhandle"></span>
-                        </div>
-
-                        <div class="form-property col-10">
-                            <div class="row">
-                                <label-field :field="'property.'+property.key+'.label'" :list="property.label" :inline="false" />
-                                <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
-                            </div>
-                            <div class="row">
-                                <div class="form-property col-12">
-                                    <label class="form-label fw-bold">Property type</label>
-                                    <select v-model="property.property_type" class="form-select" >
-                                        <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">
-                                            {{index}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-property col-6">
-                                    <label class="form-label fw-bold">{{$t('property.minCount')}}</label>
-                                    <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
-                                </div>
-                                <div class="form-property col-6">
-                                    <label class="form-label fw-bold">{{$t('property.maxCount')}}</label>
-                                    <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-property col-1 align-self-center">
-                            <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('property',property.key)"></span>
-                        </div>
+                <div class="form-group col-1 align-self-center">
+                    <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('group',groupindex)"></span>
                 </div>
-            </draggable>
-        </div>
-    </draggable>
-    <button type="button" class="btn btn-info" v-on:click="addSettingRow('property',{'id':'','label':[],'group':getLastGroupId()})">{{ $t('property.add') }}</button>
-    <button type="button" class="btn btn-info" v-on:click="addSettingRow('group',{'id':settings.shape.id+'#group'+settings.group.length,'label':[]})">{{ $t('group.add') }}</button>
+                <draggable class="dragArea list-property w-full m-2 mb-3"
+                           :list="propertiesByGroup[group.id]"
+                           group="people"
+                           @change="log(group.id, $event)"
+                           itemKey="order"
+                           handle=".properyhandle" @sort="reorderProperties(group.id)">
+                    <div v-for="(property, propertyindex) in propertiesByGroup[group.id]" :key="propertyindex" class="row border p-2">
+                            <div class="form-property col-1 align-self-center">
+                                <span class="btn btn-info btn-sm bi-arrows-move properyhandle"></span>
+                            </div>
+
+                            <div class="form-property col-10">
+                                <div class="row">
+                                    <label-field :field="'property.'+property.key+'.label'" :list="property.label" :inline="false" />
+                                    <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
+                                </div>
+                                <div class="row">
+                                    <div class="form-property col-12">
+                                        <label class="form-label fw-bold">Property type</label>
+                                        <select v-model="property.property_type" class="form-select" >
+                                            <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">
+                                                {{index}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-property col-6">
+                                        <label class="form-label fw-bold">{{$t('property.minCount')}}</label>
+                                        <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
+                                    </div>
+                                    <div class="form-property col-6">
+                                        <label class="form-label fw-bold">{{$t('property.maxCount')}}</label>
+                                        <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-property col-1 align-self-center">
+                                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('property',property.key)"></span>
+                            </div>
+                    </div>
+                </draggable>
+            </div>
+        </draggable>
+        <button type="button" class="btn btn-info" v-if="settings.group.length > 0" v-on:click="addSettingRow('property',{'id':'','label':[],'group':getLastGroupId()})">{{ $t('property.add') }}</button>
+        <button type="button" class="btn btn-info" v-on:click="addSettingRow('group',{'id':':group'+settings.group.length,'label':[]})">{{ $t('group.add') }}</button>
+    </div>
 </template>
 <script lang="ts">
   import {defineComponent, inject} from "vue";
   import LabelField from '../field/LabelField.vue';
   import IdField from '../field/IdField.vue';
+  import {validateAbsoluteIRI} from '@/mixins/validateShape';
   import { VueDraggableNext } from 'vue-draggable-next'
   import sortNestedArray from "@/mixins/sortNestedArray";
   import {addSettingRowKey, removeSettingRowKey, updateSettingFieldKey} from "@/symbols/shape";
@@ -87,11 +93,12 @@
         deep:true,
       },
     },
-    inject: ['settings','shapeConfig'],
+    inject: ['shapeConfig'],
     setup() {
       const addSettingRow = inject(addSettingRowKey);
       const removeSettingRow = inject(removeSettingRowKey);
       const updateSettingField = inject(updateSettingFieldKey);
+      const settings :any = inject('settings');
 
       if (updateSettingField === undefined) {
         throw new Error('Failed to inject function');
@@ -100,7 +107,8 @@
       return {
         addSettingRow,
         removeSettingRow,
-        updateSettingField
+        updateSettingField,
+        settings
       };
     },
     data() {
@@ -112,6 +120,7 @@
       }
     },
     methods: {
+      validateAbsoluteIRI,
       setPropertiesByGroup() {
         this.propertiesByGroup = {};
         for(const key in this.properties) {
@@ -151,6 +160,29 @@
           this.propertiesByGroup[groupId].splice(evt.added.newIndex, 0, evt.added.element);
           this.reorderProperties(groupId);
         }
+      },
+      isShapeIdValid() {
+        if(!this.settings.shape.id) {
+          return false;
+        }
+        if(this.settings.shape.id !== undefined) {
+          const matches: string[]|null = this.settings.shape.id.match(/^([a-z][a-z0-9]+):[a-zA-Z]/);
+          if(matches !== null && matches[1] !== undefined) {
+            var prefixFound = false;
+            //Check if the prefix is already set.
+            if(this.settings.prefix !== undefined) {
+              this.settings.prefix.forEach(function(prefix :any){
+                if(prefix['prefix'] === matches[1]) {
+                  prefixFound = true;
+                }
+              });
+            }
+            if(!prefixFound) {
+              return false;
+            }
+          }
+        }
+        return (this.validateAbsoluteIRI(this.settings.shape.id) === true);
       }
     },
   });
