@@ -180,7 +180,7 @@ export class LoadShapeService {
 
   getQuadOptions(quads, parent) {
     const shapeValues = {};
-    shapeValues['id'] = parent;
+    shapeValues['id'] = this.fixupLocalUrl(parent);
     shapeValues['memorixCompatible'] = false;
     shapeValues['label'] = [];
     let index = '';
