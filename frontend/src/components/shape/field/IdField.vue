@@ -173,15 +173,12 @@
       },
       getShorthandFromFullUrl(url :string) {
         let newUrl = url;
-        console.log('---------');
-        console.log( url );
         let prevPrefix = '';
         let prevLength = 0;
         Object.keys(this.settings.prefix).forEach(key => {
           const id = this.settings.prefix[key]['id'];
           const prefix = this.settings.prefix[key]['prefix'];
           if(id === url.substr(0,id.length) && (prevPrefix === '' || id.length > prevLength)) {
-            console.log(id);
             newUrl = prefix + ':' + url.substr(id.length);
             prevPrefix = prefix;
             prevLength = id.length;
