@@ -38,4 +38,11 @@
     color:$dark-grey;
   }
 
+  .prefix-warning {
+    position:absolute;
+    top:2px;
+    right:14px;
+    padding:5px 10px;
+    border-radius: 0px 5px 5px 0px;
+  }
 }

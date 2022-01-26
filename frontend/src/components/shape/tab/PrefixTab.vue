@@ -17,7 +17,7 @@
                     {{ prefix.id }}
                 </div>
                 <div class="col-sm-3 pe-0 p-1 text-end">
-                    <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix.id)" v-on:click="removeSettingRow('prefix',index)"></span>
+                    <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix)" v-on:click="removeSettingRow('prefix',index)"></span>
                 </div>
             </div>
         </div>
@@ -38,15 +38,27 @@
     setup() {
       const removeSettingRow = inject(removeSettingRowKey);
       const shapeConfig :any = inject('shapeConfig');
+      const settings :any = inject('settings');
 
       return {
         removeSettingRow,
-        shapeConfig
+        shapeConfig,
+        settings
       };
     },
     methods: {
       isDefaultPrefix(value:any) {
-        return Object.values(this.shapeConfig.default_prefixes).includes(value);
+        //you also can't remove the "self" prefix.
+        let selfPrefix = '';
+        Object.keys(this.settings.prefix).forEach(key => {
+          if(this.settings.prefix[key]['prefix'] === '') {
+            selfPrefix = this.settings.prefix[key]['id'];
+          }
+        });
+        if(value.prefix === 'self') {
+          return true;
+        }
+        return Object.values(this.shapeConfig.default_prefixes).includes(value.id);
       }
     },
   });

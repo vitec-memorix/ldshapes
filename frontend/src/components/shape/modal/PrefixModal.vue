@@ -11,14 +11,14 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Prefix</label>
                             <div class="col-sm-10">
-                                <Field type="text" v-model="new_prefix" name="new-prefix-prefix" class="form-control" :rules="validatePrefix" :placeholder="$t('prefix')" />
+                                <Field type="text" v-model="this.generalConfig.prefixId" name="new-prefix-prefix" class="form-control" :rules="validatePrefix" :placeholder="$t('prefix')" />
                                 <ErrorMessage name="new-prefix-prefix" class="error-message" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Path</label>
                             <div class="col-sm-10">
-                                <Field type="text" v-model="new_id" name="new-prefix-id" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')" />
+                                <Field type="text" v-model="new_path" name="new-prefix-id" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')" />
                                 <ErrorMessage name="new-prefix-id" class="error-message" />
                             </div>
                         </div>
@@ -42,31 +42,32 @@
     inject: ['settings'],
     setup() {
       const addSettingRow = inject(addSettingRowKey);
+      const generalConfig :any = inject('generalConfig');
 
       if (addSettingRow === undefined) {
         throw new Error('Failed to inject function');
       }
-      
+
       return {
-        addSettingRow
+        addSettingRow,
+        generalConfig
       };
     },
     data() {
       return {
-        new_prefix:'',
-        new_id:'',
+        new_path:'',
       }
     },
     methods: {
       validateAbsoluteIRI,
       validatePrefix,
       resetForm () {
-        this.new_prefix = '';
-        this.new_id = '';
+        this.generalConfig.prefixId = '';
+        this.new_path = '';
       },
       saveValue() {
-        if(this.new_id !== '' && validateAbsoluteIRI(this.new_id) === true && this.new_prefix !== '' && validatePrefix(this.new_prefix) === true) {
-          this.addSettingRow('prefix', {'id': this.new_id, 'prefix': this.new_prefix});
+        if(this.new_path !== '' && validateAbsoluteIRI(this.new_path) === true && this.generalConfig.prefixId !== '' && validatePrefix(this.generalConfig.prefixId) === true) {
+          this.addSettingRow('prefix', {'id': this.new_path, 'prefix': this.generalConfig.prefixId});
         }
         this.resetForm();
       }

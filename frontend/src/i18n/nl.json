@@ -4,7 +4,7 @@
   "createNewShape": "Maak een shape",
   "pickShapeText": "Welke shape wil je gebruiken.",
   "beginNewShape": "New shape",
-  "iri" : "Iri",
+  "iri" : "Iri/shorthand",
   "prefix" : "Prefix",
   "shape": {
     "label" : "Shape label",
@@ -60,6 +60,9 @@
   "AddLabel": "Label toevoegen",
   "ChangeTitle": "Titel aanpassen",
   "AddPrefix": "Prefix toevoegen",
+  "AddedPrefix": "Prefix toegevoegd",
+  "prefixNotFound": "Deze prefix is niet gevonden",
+  "shapeIdRequired": "Om properties toe te voegen is een geldig id van de shape verplicht.",
   "language": {
     "Dutch" : "Nederlands",
     "English" : "Engels"

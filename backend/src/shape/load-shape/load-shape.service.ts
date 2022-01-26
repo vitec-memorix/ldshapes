@@ -8,6 +8,7 @@ import {
 } from '../dto/create-shape.dto';
 import { FileService } from '../../file/file.service';
 import { GenerateShapeService } from '../generate-shape/generate-shape.service';
+const shapeConfig = require('./../../../../resources/shapes/config.json');
 const N3 = require('n3');
 const { DataFactory } = N3;
 const fs = require('fs');
@@ -15,26 +16,35 @@ const fs = require('fs');
 @Injectable()
 export class LoadShapeService {
   prefixes = {};
+  prefixesById = {};
   shapeParents = {};
   quads;
   shapeDto = new CreateShapeDto();
 
   async create(file) {
-    const shapeContent = await this.readShape(file);
+    this.shapeDto = new CreateShapeDto();
+    if (file === 'new') {
+      this.shapeDto.name = 'New shape';
+      this.setPrefixes({});
+    } else {
+      const shapeContent = await this.readShape(file);
 
-    this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
+      this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
+      this.setPrefixes(shapeContent['prefixes']);
 
-    this.setPrefixes(shapeContent['prefixes']);
+      const parents = this.getShapeParents(shapeContent['quads']);
 
-    const parents = this.getShapeParents(shapeContent['quads']);
+      this.shapeDto.shape = new ShapeDto(
+        this.getQuadOptions(shapeContent['quads'], parents['shape']),
+      );
 
-    this.shapeDto.shape = new ShapeDto(
-      this.getQuadOptions(shapeContent['quads'], parents['shape']),
-    );
+      //if there is no "self" prefix. Add it based on the shape id.
+      this.addSelfPrefix();
 
-    this.setGroups(shapeContent['quads'], parents['group']);
-    this.setProperies(shapeContent['quads'], parents['property']);
+      this.setGroups(shapeContent['quads'], parents['group']);
+      this.setProperies(shapeContent['quads'], parents['property']);
 
+    }
     return this.shapeDto;
   }
   readShape(file) {
@@ -61,12 +71,22 @@ export class LoadShapeService {
 
   setPrefixes(prefixes) {
     this.prefixes = {};
+    this.prefixesById = {};
     this.shapeDto.prefix = [];
     for (const key in prefixes) {
       this.prefixes[this.fixupLocalUrl(prefixes[key])] = key;
+      this.prefixesById[key] = this.fixupLocalUrl(prefixes[key]);
       this.shapeDto.prefix.push(
         new PrefixDto({ id: this.fixupLocalUrl(prefixes[key]), prefix: key }),
       );
+    }
+    //for all "default" prefixes set in the config not present in the prefixes. Always add them.
+    for (const key in shapeConfig.default_prefixes) {
+      if(prefixes[key] === undefined) {
+        this.shapeDto.prefix.push(
+          new PrefixDto({ id: shapeConfig.default_prefixes[key], prefix: key }),
+        );
+      }
     }
   }
 
@@ -160,7 +180,6 @@ export class LoadShapeService {
 
   getQuadOptions(quads, parent) {
     const shapeValues = {};
-
     shapeValues['id'] = this.fixupLocalUrl(parent);
     shapeValues['memorixCompatible'] = false;
     shapeValues['label'] = [];
@@ -220,22 +239,24 @@ export class LoadShapeService {
     }
     return shapeValues;
   }
+  addSelfPrefix() {
+    let selfPrefixExists = false;
+    Object.keys(this.shapeDto.prefix).forEach(value => {
+      if(value['prefix'] === 'self') {
+        selfPrefixExists = true;
+      }
+    });
+    if(!selfPrefixExists) {
+      this.shapeDto.prefix.push({
+        id:new URL(this.shapeDto.shape.id + '#'),
+        prefix:'self',
+      });
+    }
+  }
 
   fixupLocalUrl(url) {
     if (url.substring(0, 10) === 'undefined/') {
       url = url.substring(9);
-    }
-    return url;
-  }
-
-  getShorthand(url) {
-    const prefixUrl = this.getPrefixUrl(url);
-    if (this.prefixes[this.getPrefixUrl(url)]) {
-      return (
-        this.prefixes[this.getPrefixUrl(url)] +
-        ':' +
-        url.substr(this.getPrefixUrl(url).length)
-      );
     }
     return url;
   }

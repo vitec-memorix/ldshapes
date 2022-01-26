@@ -3,7 +3,7 @@
   "functionalityForNow": "Functionality for now",
   "pickShapeText": "Which existing shape do you want to use.",
   "createNewShape": "Create new shape",
-  "iri" : "Iri",
+  "iri" : "Iri/shorthand",
   "prefix" : "Prefix",
   "shape": {
     "label" : "Shape label",

@@ -124,7 +124,6 @@ export class GenerateShapeService {
     this.addLiteral(
       this.prefixes['rdfs'] + 'comment',
       this.createShapeDto.shape.comment,
-      this.createShapeDto.shape.language,
     );
 
     this.addLiteral(
