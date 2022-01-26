@@ -55,7 +55,7 @@
             selfPrefix = this.settings.prefix[key]['id'];
           }
         });
-        if(value.prefix === '') {
+        if(value.prefix === 'self') {
           return true;
         }
         return Object.values(this.shapeConfig.default_prefixes).includes(value.id);

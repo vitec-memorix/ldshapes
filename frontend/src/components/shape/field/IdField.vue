@@ -165,7 +165,7 @@
           });
           if(!selfPrefixExists) {
             this.settings.prefix.push({
-              'prefix':'',
+              'prefix':'self',
               'id':fullUrl + '#'
             });
           }
@@ -178,7 +178,7 @@
         Object.keys(this.settings.prefix).forEach(key => {
           const id = this.settings.prefix[key]['id'];
           const prefix = this.settings.prefix[key]['prefix'];
-          if(id === url.substr(0,id.length) && (prevPrefix === '' || id.length > prevLength)) {
+          if(id === url.substr(0,id.length) && (prevPrefix === '' || prevPrefix === 'self'  || id.length > prevLength)) {
             newUrl = prefix + ':' + url.substr(id.length);
             prevPrefix = prefix;
             prevLength = id.length;

@@ -242,14 +242,14 @@ export class LoadShapeService {
   addSelfPrefix() {
     let selfPrefixExists = false;
     Object.keys(this.shapeDto.prefix).forEach(value => {
-      if(value['prefix'] === '') {
+      if(value['prefix'] === 'self') {
         selfPrefixExists = true;
       }
     });
     if(!selfPrefixExists) {
       this.shapeDto.prefix.push({
         id:new URL(this.shapeDto.shape.id + '#'),
-        prefix:'',
+        prefix:'self',
       });
     }
   }
