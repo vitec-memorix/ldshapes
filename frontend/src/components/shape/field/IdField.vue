@@ -172,6 +172,9 @@
         }
       },
       getShorthandFromFullUrl(url :string) {
+        if(url === undefined){
+          return url;
+        }
         let newUrl = url;
         let prevPrefix = '';
         let prevLength = 0;
