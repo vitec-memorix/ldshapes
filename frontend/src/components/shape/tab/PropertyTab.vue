@@ -4,9 +4,13 @@
     </div>
     <div v-if="isShapeIdValid()">
         <draggable class="dragArea list-group w-full m-2 mb-3" v-model="groups" handle=".grouphandle" @sort="reorderGroups">
-            <div v-for="(group, groupindex) in groups" :key="groupindex" class="row border p-2">
-                <div class="form-group col-1 align-self-center">
-                    <span class="btn btn-info btn-sm bi-arrows-move grouphandle"></span>
+            <div v-for="(group, groupindex) in groups" :key="groupindex" class="row pt-2">
+                <div class="form-group col-12 col-sm-1 p-sm-0">
+                    <div class="property-button-container float-sm-start">
+                        <span class="btn btn-grey btn-sm grouphandle">
+                        <i class="bi-arrows-move"/>
+                        </span>
+                    </div>
                 </div>
                 <div class="form-group col-10">
                     <div class="row">
@@ -15,24 +19,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-1 align-self-center">
-                    <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('group',groupindex)"></span>
+                <div class="form-group col-12 col-sm-1 p-sm-0">
+                    <div class="property-button-container float-sm-end" v-if="isGroupEmpty(group.id)">
+                        <span class="btn btn-grey btn-sm" v-on:click="removeSettingRow('group',groupindex)"><i class="bi-trash"/></span>
+                    </div>
                 </div>
-                <draggable class="dragArea list-property w-full m-2 mb-3"
+                <div class="col-12">
+                    <div class="row">
+                <draggable class="dragArea list-property "
                            :list="propertiesByGroup[group.id]"
                            group="people"
                            @change="log(group.id, $event)"
                            itemKey="order"
                            handle=".properyhandle" @sort="reorderProperties(group.id)">
-                    <div v-for="(property, propertyindex) in propertiesByGroup[group.id]" :key="propertyindex" class="row border p-2">
-                            <div class="form-property col-1 align-self-center">
-                                <span class="btn btn-info btn-sm bi-arrows-move properyhandle"></span>
+                    <div v-for="(property, propertyindex) in propertiesByGroup[group.id]" :key="propertyindex" class="row pt-2">
+                            <div class="form-property col-12 col-sm-1 p-sm-0">
+                                <div class="property-button-container float-sm-start">
+                                    <span class="btn btn-grey btn-sm properyhandle"><i class="bi-arrows-move"/></span>
+                                </div>
                             </div>
 
-                            <div class="form-property col-10">
+                            <div class="form-property col-12 col-sm-10">
                                 <div class="row">
                                     <label-field :field="'property.'+property.key+'.label'" :list="property.label" :inline="false" />
-                                    <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
                                 </div>
                                 <div class="row">
                                     <div class="form-property col-12 col-lg-5">
@@ -48,21 +57,37 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="form-property col-6">
-                                        <label class="form-label fw-bold">{{$t('property.minCount')}}</label>
-                                        <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
+
+                                    <div class="form-property col-12 col-lg-4">
+                                        <div class="row">
+                                            <div class="form-property col-12">
+                                                <label class="form-label small-form-label">{{$t('property.minMaxCount')}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-property col-6">
+                                                <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
+                                            </div>
+                                            <div class="form-property col-6">
+                                                <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-property col-6">
-                                        <label class="form-label fw-bold">{{$t('property.maxCount')}}</label>
-                                        <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
-                                    </div>
+
+
                                 </div>
                             </div>
-                            <div class="form-property col-1 align-self-center">
-                                <span class="btn btn-danger btn-sm bi-trash" v-on:click="removeSettingRow('property',property.key)"></span>
+                            <div class="form-property col-12 col-sm-1 p-sm-0">
+                                <div class="property-button-container float-sm-end">
+                                    <span class="btn btn-grey btn-sm" v-on:click="removeSettingRow('property',property.key)">
+                                        <i class="bi-trash"/>
+                                    </span>
+                                </div>
                             </div>
                     </div>
                 </draggable>
+                    </div>
+                </div>
             </div>
         </draggable>
         <button type="button" class="btn btn-info" v-if="settings.group.length > 0" v-on:click="addSettingRow('property',{'id':'','label':[],'group':getLastGroupId()})">{{ $t('property.add') }}</button>
@@ -165,6 +190,12 @@
           this.propertiesByGroup[groupId].splice(evt.added.newIndex, 0, evt.added.element);
           this.reorderProperties(groupId);
         }
+      },
+      isGroupEmpty(group:string) {
+        if(this.propertiesByGroup[group] === undefined || this.propertiesByGroup[group].length == 0) {
+          return true;
+        }
+        return false;
       },
       isShapeIdValid() {
         if(!this.settings.shape.id) {

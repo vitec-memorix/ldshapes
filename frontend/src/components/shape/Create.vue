@@ -1,10 +1,11 @@
 <template>
     <div class="container">
         <div class="row mb-3">
-            <div class="col-sm-8 page-header">
-                <a href="/shape/pick">Shape creator</a> / {{settingsObject.name}} <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
+            <div class="col-12 col-md-8 page-header">
+                <a href="/shape/pick">Shape creator</a> / <span class="object-name">{{settingsObject.name}}</span>
+                <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
             </div>
-            <div class="col-sm-4 text-end" v-show="getActiveTab() === 'shape' ">
+            <div class="col-12 col-md-4 text-md-end" v-show="getActiveTab() === 'shape' ">
                 <button class="btn btn-primary" @click="onSubmit">{{ $t('save') }}</button>
                 <button class="btn btn-primary disabled ms-3" disabled="true"><span class="bi-upload"></span> Import</button>
             </div>
