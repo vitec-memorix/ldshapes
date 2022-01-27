@@ -35,11 +35,16 @@
                                     <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
                                 </div>
                                 <div class="row">
-                                    <div class="form-property col-12">
-                                        <label class="form-label fw-bold">Property type</label>
-                                        <select v-model="property.property_type" class="form-select" >
-                                            <option v-for="(property_type, index) in shapeConfig.property_types" :key="index" :value="index">
-                                                {{index}}
+                                    <div class="form-property col-12 col-lg-5">
+                                        <div class="row">
+                                            <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
+                                        </div>
+                                    </div>
+                                    <div class="form-property col-12 col-lg-3">
+                                        <label class="form-label small-form-label">sh:datatype</label>
+                                        <select v-model="property.datatype" class="form-select" >
+                                            <option v-for="(data_type, index) in shapeConfig.datatypes" :key="index" :value="index">
+                                                {{data_type}}
                                             </option>
                                         </select>
                                     </div>

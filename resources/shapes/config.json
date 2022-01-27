@@ -1,11 +1,7 @@
 {
   "languages": {
-  "nl": "Dutch",
-  "en": "English"
-},
-  "property_paths": {
-    "http://www.w3.org/2002/07/owl#":"owl",
-    "https://www.ica.org/standards/RiC/ontology#":"rico"
+    "nl": "Dutch",
+    "en": "English"
   },
   "default_prefixes": {
     "sh": "http://www.w3.org/ns/shacl#",
@@ -16,14 +12,9 @@
     "dash": "http://datashapes.org/dash#",
     "memorix": "http://memorix.io/ontology#"
   },
-  "property_types" : {
-    "text" : {
-      "http://www.w3.org/ns/shacl#datatype": "http://www.w3.org/2001/XMLSchema#string",
-      "http://datashapes.org/dash#singleLine": true
-    },
-    "textarea" : {
-      "http://www.w3.org/ns/shacl#datatype": "http://www.w3.org/2001/XMLSchema#string",
-      "http://datashapes.org/dash#editor": "http://datashapes.org/dash#TextAreaEditor"
-    }
+  "datatypes" : {
+    "http://www.w3.org/2001/XMLSchema#string": "xsd:string",
+    "http://www.w3.org/2001/XMLSchema#integer": "xsd:integer",
+    "http://www.w3.org/2001/XMLSchema#date": "xsd:date"
   }
 }
