@@ -217,11 +217,18 @@ export class LoadShapeService {
         selfPrefixExists = true;
       }
     });
-    if(!selfPrefixExists) {
-      this.shapeDto.prefix.push({
-        id:new URL(this.shapeDto.shape.id + '#'),
-        prefix:'self',
-      });
+    if (!selfPrefixExists) {
+      try {
+        const url = new URL(this.shapeDto.shape.id + '#');
+      } catch (_) {
+        return false;
+      }
+      if(url !== undefined) {
+        this.shapeDto.prefix.push({
+          id: new URL(this.shapeDto.shape.id + '#'),
+          prefix: 'self',
+        });
+      }
     }
   }
 
