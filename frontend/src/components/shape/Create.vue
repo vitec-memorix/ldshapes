@@ -23,7 +23,7 @@
                         <button class="nav-link" id="prefix-tab" @click="setCurrentTab('prefix')" data-bs-toggle="tab" data-bs-target="#prefix" ref="prefixTab" type="button" role="tab" aria-controls="prefix" aria-selected="false">Prefixes</button>
                     </li>
                 </ul>
-                <div class="tab-content p-2 border-start pb-5" id="myTabContent">
+                <div class="tab-content p-2 ps-3 pe-3 border-start" id="myTabContent">
                     <div class="tab-pane fade show active" id="shape" role="tabpanel" aria-labelledby="shape-tab">
                         <shape-tab/>
                     </div>

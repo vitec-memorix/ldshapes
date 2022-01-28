@@ -1,6 +1,6 @@
 <template>
-    <div class="container list-view mb-3">
-        <div>
+    <div class="scrollable-content">
+        <div class="container list-view mb-3">
             <div class="row">
                 <div class="col-sm-2 small-form-label">
                     Prefix
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-3">
+    <div class="row">
         <div class="col-sm-12">
             <button class="btn btn-light btn-outline-dark pe-4 ps-4" type="button" data-bs-toggle="modal" data-bs-target="#rdfsPrefixModal">Add prefix</button>
         </div>
