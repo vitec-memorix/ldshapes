@@ -29,6 +29,7 @@
   "autofill" : "automatisch gevuld",
   "download" : "Download",
   "save" : "Opslaan",
+  "saveDownload" : "Opslaan + Download",
   "createNewResources" : {
 	 "title": "Maak nieuwe Linked Data",
 	 "create" : {
