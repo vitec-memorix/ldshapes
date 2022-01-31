@@ -135,35 +135,35 @@ export class GenerateShapeService {
   }
 
   async addShapeProperties() {
-    const self = this;
-    this.createShapeDto.property.forEach(function (property) {
+    Object.values(this.createShapeDto.property).forEach(property => {
       const options = [
         {
-          predicate: namedNode(self.prefixes['sh'] + 'path'),
-          object: namedNode(property.path),
+          predicate: namedNode(this.prefixes['sh'] + 'path'),
+          object: namedNode(this.shorthandToFullUrl(property['path'])),
         },
         {
-          predicate: namedNode(self.prefixes['sh'] + 'order'),
+          predicate: namedNode(this.prefixes['sh'] + 'order'),
           object: literal(
-            self.ordering.toFixed(1),
+            this.ordering.toFixed(1),
             namedNode('http://www.w3.org/2001/XMLSchema#decimal'),
           ),
         },
       ];
+
       //add labels
-      property.label.forEach(function (label) {
+      Object.values(property['label']).forEach(label => {
         options.push({
-          predicate: namedNode(self.prefixes['rdfs'] + 'label'),
-          object: literal(label.title, label.language),
+          predicate: namedNode(this.prefixes['rdfs'] + 'label'),
+          object: literal(label['title'], label['language']),
         });
       });
 
       //add group
-      for (const key in self.createShapeDto.group) {
-        if (self.createShapeDto.group[key]['id'] === property.group) {
+      for (const key in this.createShapeDto.group) {
+        if (this.createShapeDto.group[key]['id'] === property['group']) {
           options.push({
-            predicate: namedNode(self.prefixes['sh'] + 'group'),
-            object: namedNode(self.createShapeDto.group[key]['id']),
+            predicate: namedNode(this.prefixes['sh'] + 'group'),
+            object: namedNode(this.createShapeDto.group[key]['id']),
           });
         }
       }
@@ -172,7 +172,7 @@ export class GenerateShapeService {
       Object.values(['datatype']).forEach(val => {
         if (property[val] !== undefined && property[val] !== '') {
           options.push({
-            predicate: namedNode(self.prefixes['sh'] + val),
+            predicate: namedNode(this.prefixes['sh'] + val),
             object: namedNode(property[val]),
           });
         }
@@ -182,18 +182,18 @@ export class GenerateShapeService {
       Object.values(['minCount','maxCount']).forEach(val => {
         if (property[val] !== undefined && property[val] !== '') {
           options.push({
-            predicate: namedNode(self.prefixes['sh'] + val),
+            predicate: namedNode(this.prefixes['sh'] + val),
             object: literal(property[val]),
           });
         }
       });
 
-      self.writer.addQuad(
-        namedNode(self.createShapeDto.shape.id),
-        namedNode(self.prefixes['sh'] + 'property'),
-        self.writer.blank(options),
+      this.writer.addQuad(
+        namedNode(this.createShapeDto.shape.id),
+        namedNode(this.prefixes['sh'] + 'property'),
+        this.writer.blank(options),
       );
-      self.ordering++;
+      this.ordering++;
     });
   }
 
@@ -211,7 +211,6 @@ export class GenerateShapeService {
   addShapePrefixes() {
     const self = this;
 
-    // console.log(this.createShapeDto.prefix);
     //add the prefixes for the schema itself.
     this.createShapeDto.prefix.forEach(function (row) {
       self.prefixes[row.prefix] = row.id;
@@ -240,5 +239,14 @@ export class GenerateShapeService {
       namedNode(type),
       literal(literalValue, languageOrDatatype),
     );
+  }
+
+  shorthandToFullUrl(url) {
+    Object.keys(this.prefixes).forEach(key => {
+      if(url.substr(0,key.length+1) === `${key}:`) {
+        url = `${this.prefixes[key]}${url.substr( key.length + 1)}`
+      }
+    });
+    return url;
   }
 }

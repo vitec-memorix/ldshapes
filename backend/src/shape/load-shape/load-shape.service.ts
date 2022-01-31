@@ -212,23 +212,15 @@ export class LoadShapeService {
   }
   addSelfPrefix() {
     let selfPrefixExists = false;
-    Object.keys(this.shapeDto.prefix).forEach(value => {
+    Object.values(this.shapeDto.prefix).forEach(value => {
       if(value['prefix'] === 'self') {
         selfPrefixExists = true;
       }
     });
     if (!selfPrefixExists) {
-      try {
-        const url = new URL(this.shapeDto.shape.id + '#');
-      } catch (_) {
-        return false;
-      }
-      if(url !== undefined) {
-        this.shapeDto.prefix.push({
-          id: new URL(this.shapeDto.shape.id + '#'),
-          prefix: 'self',
-        });
-      }
+      this.shapeDto.prefix.unshift(
+        new PrefixDto({ id: this.shapeDto.shape.id + '#', prefix: 'self' }),
+      );
     }
   }
 
