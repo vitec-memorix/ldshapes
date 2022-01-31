@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { ShapeService } from './shape.service';
+import { FileService } from '../file/file.service';
 import { CreateShapeDto } from './dto/create-shape.dto';
 
 @Controller('shape')
 export class ShapeController {
-  constructor(private readonly shapeService: ShapeService) {}
+  constructor(
+    private readonly shapeService: ShapeService,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post()
   async create(@Body() createShapeDto: CreateShapeDto) {
@@ -19,5 +23,10 @@ export class ShapeController {
   @Get(':file')
   async findOne(@Param('file') file: string) {
     return await this.shapeService.loadShape(file);
+  }
+
+  @Delete(':file')
+  async delete(@Param('file') file: string) {
+    return await this.fileService.deleteFile('shapes/'+file);
   }
 }

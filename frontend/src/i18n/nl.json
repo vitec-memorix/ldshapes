@@ -21,8 +21,7 @@
   "property": {
     "add" : "Voeg property toe",
     "label" : "Property label",
-    "maxCount" : "Maximaal aantal waarden",
-    "minCount" : "Minimaal aantal waarden",
+    "minMaxCount" : "Minimum/maximum waarde",
     "path" : "Property path"
   },
   "memorixCompatible" : "Shape is voor Memorix",

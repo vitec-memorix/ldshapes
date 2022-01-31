@@ -1,7 +1,11 @@
 .navbar {
   background:$menu-blue;
   color:$white;
+  z-index:1000;
+  top:0px;
+  position:absolute;
   padding:0px;
+  width:100%;
   #navbarNavDropdown {
     position:relative;
     .navbar-right {
@@ -52,11 +56,17 @@
       height:76px;
       font-size:1px;
       text-indent:-100px;
-      min-width:280px;
+      min-width:170px;
       background:url('/images/ldshapes-white.svg');
-      background-size: auto 70%;
+      background-size: auto 50%;
       background-repeat: no-repeat;
       background-position: left center;
+
+      @media (min-width: $xsmall) {
+        min-width:280px;
+        background-size: auto 70%;
+      }
+
     }
     span {
       font-size:25px;

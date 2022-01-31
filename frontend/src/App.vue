@@ -6,7 +6,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="bi-list"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse pb-5 pb-lg-0" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item" :class="isActiveMenu('shape')">
               <a class="nav-link" href="/shape/pick"><span class="bi-grid"></span>Shape creator</a>

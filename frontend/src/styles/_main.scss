@@ -1,6 +1,7 @@
 
 body {
   background:$grey;
+  font-family: "Lato", Helvetica, Arial;
 
   .main-content {
     max-width:1440px;
@@ -9,8 +10,18 @@ body {
     min-height:100vh;
   }
   .page-content {
-    padding-top:40px;
-    padding-bottom:100px;
+    padding-top:86px;
+
+    @media (min-width: $small) {
+      padding-top:118px;
+    }
+
+    .scrollable-content {
+      height:calc( 100vh - 300px );
+      overflow:auto;
+      padding-right:20px;
+      margin-bottom:16px;
+    }
   }
 
   h1, h2, h3 {
@@ -22,9 +33,26 @@ body {
   }
 
   .page-header {
-    font-size:2em;
     font-weight:normal;
-    line-height:1.4em;
+    font-size:1.5em;
+    line-height:1.2em;
+    padding-bottom:10px;
+    .object-name {
+        display: inline-block;
+        vertical-align: top;
+        max-width: calc(100% - 190px);
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+    @media (min-width: $small) {
+      font-size:2em;
+      line-height:1.4em;
+      padding-bottom:0px;
+      .object-name {
+        max-width: calc(100% - 250px);
+      }
+    }
   }
 
   .btn-primary {

@@ -21,21 +21,12 @@
                         <button class="btn" @click="chooseAndRedirect(shape)">{{shape}}</button>
                     </div>
                     <div class="col-sm-3 pe-0 text-end">
-                        <button class="btn btn-outline-dark disabled ms-3" disabled="true"><span class="bi-trash"></span> Delete</button>
+                        <button class="btn btn-outline-dark ms-3" @click="deleteShape(shape)"><span class="bi-trash"></span> Delete</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-<!--    <div class="col-md-8 form-wrapper">-->
-
-<!--        <p>{{ $t('pickShapeText') }}</p>-->
-<!--        <div v-for="(shape, index) in sourceShapes" :key="index" :value="shape" class="pb-3">-->
-<!--            <button class="btn btn-primary" @click="chooseAndRedirect(shape)">{{shape}}</button>-->
-<!--        </div>-->
-<!--        <button class="btn btn-secondary" @click="chooseAndRedirect('')">{{ $t('beginNewShape') }}</button>-->
-<!--    </div>-->
 </template>
 
 <script lang="ts">
@@ -51,17 +42,25 @@
       }
     },
     mounted() {
-      axios.get(`${server.baseURL}/shape`).then(response => {
-        if(typeof response.data === 'object') {
-          this.sourceShapes = response.data;
-        }
-      });
+      this.fetchShapes();
     },
     methods: {
+      fetchShapes() {
+        axios.get(`${server.baseURL}/shape`).then(response => {
+          if(typeof response.data === 'object') {
+            this.sourceShapes = response.data;
+          }
+        });
+      },
       chooseAndRedirect(value:string) {
         sessionStorage.setItem('sourceShape', value);
         this.$router.push('create');
       },
+      deleteShape(value:string) {
+        axios.delete(`${server.baseURL}/shape/${value}`).then(response => {
+          this.fetchShapes();
+        });
+      }
     }
   });</script>
 

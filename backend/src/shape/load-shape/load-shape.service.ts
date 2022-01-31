@@ -144,38 +144,8 @@ export class LoadShapeService {
   setProperies(quads, properties) {
     for (const key in properties) {
       const value = this.getQuadOptions(quads, properties[key]);
-      value['property_type'] = this.getPropertyType(quads, value['id']);
       this.shapeDto.property.push(new PropertyDto(value));
     }
-  }
-
-  getPropertyType(quads, id) {
-    let datatype = 'http://www.w3.org/2001/XMLSchema#string';
-    let editor = '';
-    let property_type = null;
-
-    for (const key in quads) {
-      if (quads[key].subject.value === id) {
-        if (quads[key].predicate.value == 'http://datashapes.org/dash#editor') {
-          editor = quads[key].object.value;
-        } else if (
-          quads[key].predicate.value == 'http://www.w3.org/ns/shacl#datatype'
-        ) {
-          datatype = quads[key].object.value;
-        }
-      }
-    }
-
-    //check which type of field it is. if it's a string. It's a text field.
-    if (datatype === 'http://www.w3.org/2001/XMLSchema#string') {
-      property_type = 'text';
-      //if it is a textarea editor it's a textarea field.
-      if (editor === 'http://datashapes.org/dash#TextAreaEditor') {
-        property_type = 'textarea';
-      }
-    }
-
-    return property_type;
   }
 
   getQuadOptions(quads, parent) {
@@ -207,6 +177,7 @@ export class LoadShapeService {
           case 'http://www.w3.org/ns/shacl#order':
           case 'http://purl.org/dc/elements/1.1/identifier':
           case 'http://www.w3.org/2000/01/rdf-schema#comment':
+          case 'http://www.w3.org/ns/shacl#datatype':
             index = quads[key].predicate.value.substr(
               this.getPrefixUrl(quads[key].predicate.value).length,
             );

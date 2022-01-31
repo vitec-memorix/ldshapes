@@ -3,6 +3,7 @@
 // Then import Bootstrap an BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
+@import './fonts';
 @import './icons';
 @import './main';
 @import './menu';

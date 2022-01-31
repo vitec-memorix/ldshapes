@@ -167,39 +167,26 @@ export class GenerateShapeService {
           });
         }
       }
-      //add field specifics
-      for (const key in shapeConfig.property_types[property.property_type]) {
-        let object = namedNode(
-          shapeConfig.property_types[property.property_type][key],
-        );
-        if (
-          typeof shapeConfig.property_types[property.property_type][key] ===
-          'boolean'
-        ) {
-          object = literal(
-            shapeConfig.property_types[property.property_type][key],
-          );
-        }
-        options.push({
-          predicate: namedNode(key),
-          object: object,
-        });
-      }
 
-      //add minCount
-      if (property.minCount !== undefined && property.minCount !== '') {
-        options.push({
-          predicate: namedNode(self.prefixes['sh'] + 'minCount'),
-          object: literal(property.minCount),
-        });
-      }
-      //add max count
-      if (property.maxCount !== undefined && property.maxCount !== '') {
-        options.push({
-          predicate: namedNode(self.prefixes['sh'] + 'maxCount'),
-          object: literal(property.maxCount),
-        });
-      }
+      //add named node fields when they exist
+      Object.values(['datatype']).forEach(val => {
+        if (property[val] !== undefined && property[val] !== '') {
+          options.push({
+            predicate: namedNode(self.prefixes['sh'] + val),
+            object: namedNode(property[val]),
+          });
+        }
+      });
+
+      //add literal fields when they exist
+      Object.values(['minCount','maxCount']).forEach(val => {
+        if (property[val] !== undefined && property[val] !== '') {
+          options.push({
+            predicate: namedNode(self.prefixes['sh'] + val),
+            object: literal(property[val]),
+          });
+        }
+      });
 
       self.writer.addQuad(
         namedNode(self.createShapeDto.shape.id),

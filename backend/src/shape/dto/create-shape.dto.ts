@@ -55,7 +55,7 @@ export class PropertyDto extends BaseShapeDto {
   group: string;
   minCount: number;
   maxCount: number;
-  property_type: string;
+  datatype: string;
   constructor(bodyValue: any = {}) {
     super(bodyValue);
     this.path = bodyValue.path;
@@ -63,7 +63,7 @@ export class PropertyDto extends BaseShapeDto {
     this.group = bodyValue.group;
     this.minCount = bodyValue.minCount;
     this.maxCount = bodyValue.maxCount;
-    this.property_type = bodyValue.property_type;
+    this.datatype = bodyValue.datatype;
   }
 }
 

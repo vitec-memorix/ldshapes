@@ -24,4 +24,19 @@ export class FileService {
   public getBasePath(): string {
     return dirname(process.cwd()) + '/resources/';
   }
+
+  public deleteFile(file :string): void {
+    let filePath = this.getBasePath() + file;
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlink(this.getBasePath() + file, function(err) {
+          if (err) {
+            throw err
+          }
+        });
+      }
+    } catch(err) {
+      throw err
+    }
+  }
 }
