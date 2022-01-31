@@ -31,19 +31,4 @@ export class FileController {
     return new StreamableFile(file);
   }
 
-  //
-  // @Get()
-  // async findAll() {
-  //   return JSON.stringify(await this.shapeService.getAllShapeFiles());
-  // }
-  //
-  // @Get(':file')
-  // async findOne(@Param('file') file: string) {
-  //   return await this.shapeService.loadShape(file);
-  // }
-  //
-  // @Delete(':file')
-  // async delete(@Param('file') file: string) {
-  //   return await this.fileService.deleteFile('shapes/'+file);
-  // }
 }

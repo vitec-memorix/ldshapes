@@ -55,29 +55,3 @@ export const multerOptions = {
     },
   }),
 };
-
-
-//
-// {
-//   storage: diskStorage({
-//     destination: function(req, file, cb) {
-//       console.log(req.params);
-//       cb(null, `${storagePath}`);
-//     },
-//     filename: (_req, file, cb) => {
-//       let filename = `${file.originalname}`;
-//       let newFilename = filename;
-//       //file extension exists
-//       let n = filename.lastIndexOf('.');
-//       //add a number for duplicates
-//       let filenumber = 1;
-//       if (n >= 0) {
-//         while (fs.existsSync(`${storagePath}/${newFilename}`)) {
-//           filenumber++;
-//           newFilename = filename.substring(0, n) + '(' + filenumber + ')' + filename.substring(n);
-//         }
-//       }
-//       //save file as original filename.
-//       cb(null, `${newFilename}`)
-//     }
-//   })
