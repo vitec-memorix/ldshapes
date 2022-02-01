@@ -49,16 +49,10 @@
     methods: {
       isDefaultPrefix(value:any) {
         //you also can't remove the "self" prefix.
-        let selfPrefix = '';
-        Object.keys(this.settings.prefix).forEach(key => {
-          if(this.settings.prefix[key]['prefix'] === '') {
-            selfPrefix = this.settings.prefix[key]['id'];
-          }
-        });
-        if(value.prefix === 'self') {
+        if(value['prefix'] === 'self') {
           return true;
         }
-        return Object.values(this.shapeConfig.default_prefixes).includes(value.id);
+        return Object.values(this.shapeConfig['default_prefixes']).includes(value.id);
       }
     },
   });

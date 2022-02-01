@@ -77,7 +77,7 @@
         this.$router.push('create');
       },
       deleteShape(value:string) {
-        axios.delete(`${server.baseURL}/shape/${value}`).then(response => {
+        axios.delete(`${server.baseURL}/shape/${value}`).then(() => {
           this.fetchShapes();
         });
       },

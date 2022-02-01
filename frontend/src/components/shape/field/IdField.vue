@@ -101,16 +101,16 @@
             var prefixFound = false;
             this.prefixId = matches[1];
             //Check if the prefix is already set.
-            if(this.settings.prefix !== undefined) {
-              this.settings.prefix.forEach(function(prefix :any){
-                if(prefix['prefix'] === matches[1]) {
+            if(this.settings['prefix'] !== undefined) {
+              Object.keys(this.settings['prefix']).forEach(key => {
+                if(this.settings['prefix'][key]['prefix'] === matches[1]) {
                   prefixFound = true;
                 }
-              })
+              });
               //if no prefix is found. Check if the prefix is set on prefix.cc
               //add automatically
               if(prefixFound === false && this.prefixesCC[matches[1]] !== undefined) {
-                this.settings.prefix.push({
+                this.settings['prefix'].push({
                   id:this.prefixesCC[matches[1]],
                   prefix:matches[1]
                 })
@@ -146,25 +146,43 @@
       },
       saveOldId() {
         if (this.field === 'shape.id') {
-          this.oldId = this.getFullIri(this.settings.shape.id);
+          this.oldId = this.getFullIri(this.settings['shape']['id']);
         }
       },
       addSelfPrefixById() {
         if (this.field === 'shape.id') {
           let selfPrefixExists = false;
-          var fullUrl = this.getFullIri(this.settings.shape.id);
-          Object.keys(this.settings.prefix).forEach(key => {
-            if(this.settings.prefix[key]['prefix'] === '') {
+          var fullUrl = this.getFullIri(this.settings['shape']['id']);
+          Object.keys(this.settings['prefix']).forEach(key => {
+            if(this.settings['prefix'][key]['prefix'] === 'self') {
               selfPrefixExists = true;
-              this.settings.prefix[key]['id'] = fullUrl + '#';
+              this.settings['prefix'][key]['id'] = fullUrl + '#';
             }
-            if(this.oldId !== '' && this.settings.prefix[key]['id'].substr(0,this.oldId.length) === this.oldId) {
+            if(this.oldId !== '' && this.settings['prefix'][key]['id'].substr(0,this.oldId.length) === this.oldId) {
               //if the id changes. Change the prefix set for self (named) also.
-              this.settings.prefix[key]['id'] = fullUrl + '#';
+              this.settings['prefix'][key]['id'] = fullUrl + '#';
             }
           });
+          //and change the paths for all properties and groups that need changing.
+          Object.keys(this.settings['group']).forEach(key => {
+            if(this.settings['group'][key]['id'].substr(0,this.oldId.length)) {
+              this.settings['group'][key]['id'] = fullUrl + this.settings['group'][key]['id'].substr(this.oldId.length);
+            }
+          });
+          Object.keys(this.settings['property']).forEach(key => {
+            if(this.settings['property'][key]['path'].substr(0,this.oldId.length)) {
+              this.settings['property'][key]['path'] = fullUrl + this.settings['property'][key]['path'].substr(this.oldId.length);
+            }
+            if(this.settings['property'][key]['group'] !== undefined && this.settings['property'][key]['group'].substr(0,this.oldId.length)) {
+              this.settings['property'][key]['group'] = fullUrl + this.settings['property'][key]['group'].substr(this.oldId.length);
+            }
+          });
+
+          // console.log(this.settings['group']);
+          // console.log(this.settings['property']);
+
           if(!selfPrefixExists) {
-            this.settings.prefix.unshift({
+            this.settings['prefix'].unshift({
               'prefix':'self',
               'id':fullUrl + '#'
             });
@@ -178,9 +196,9 @@
         let newUrl = url;
         let prevPrefix = '';
         let prevLength = 0;
-        Object.keys(this.settings.prefix).forEach(key => {
-          const id = this.settings.prefix[key]['id'];
-          const prefix = this.settings.prefix[key]['prefix'];
+        Object.keys(this.settings['prefix']).forEach(key => {
+          const id = this.settings['prefix'][key]['id'];
+          const prefix = this.settings['prefix'][key]['prefix'];
           if(id === url.substr(0,id.length) && (prevPrefix === '' || prevPrefix === 'self'  || id.length > prevLength)) {
             newUrl = prefix + ':' + url.substr(id.length);
             prevPrefix = prefix;
