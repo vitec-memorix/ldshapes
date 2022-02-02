@@ -86,8 +86,6 @@
             return Promise.reject(error)
           }
         );
-        // console.log(document.getElementById('upload_cancel_button'));
-        // document.getElementById('upload_cancel_button').click();
       },
       /*
         Handles a change on the file upload
