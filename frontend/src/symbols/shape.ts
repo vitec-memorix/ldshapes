@@ -1,5 +1,5 @@
 import { InjectionKey } from "vue";
-import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction, GetFullIriFunction } from "@/types/shape";
+import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction, GetFullIriFunction, FetchShapesFunction } from "@/types/shape";
 
 export const updateSettingFieldKey: InjectionKey<UpdateSettingFieldFunction> = Symbol(
   "updateSettingField"
@@ -16,3 +16,9 @@ export const removeSettingRowKey: InjectionKey<RemoveSettingRowFunction> = Symbo
 export const getFullIriKey: InjectionKey<GetFullIriFunction> = Symbol(
   "getFullIri"
 );
+
+export const fetchShapesKey: InjectionKey<FetchShapesFunction> = Symbol(
+  "fetchShapes"
+);
+
+

@@ -1,13 +1,13 @@
 <template>
     <div class="container">
         <div class="row mb-3">
-            <div class="col-12 col-md-8 page-header">
+            <div class="col-12 col-lg-8 page-header">
                 <a href="/shape/pick">Shape creator</a> / <span class="object-name">{{settingsObject.name}}</span>
                 <button class="btn btn-link p-0 align-bottom" type="button" data-bs-toggle="modal" data-bs-target="#titleModal"><span class="bi-edit"></span></button>
             </div>
-            <div class="col-12 col-md-4 text-md-end" v-show="getActiveTab() === 'shape' ">
-                <button class="btn btn-primary" @click="onSubmit">{{ $t('save') }}</button>
-                <button class="btn btn-primary disabled ms-3" disabled="true"><span class="bi-upload"></span> Import</button>
+            <div class="col-12 col-lg-4 text-lg-end">
+                <button class="btn btn-primary" @click="onSubmit('save')">{{ $t('save') }}</button>
+                <button class="btn btn-primary ms-3" @click="onSubmit('download')">{{ $t('saveDownload') }}</button>
             </div>
         </div>
         <div class="col-md-12 form-wrapper">
@@ -183,10 +183,26 @@
           return response.data;
         });
       },
-      onSubmit() {
+      onSubmit(type:string) {
         axios.post(`${server.baseURL}/shape`, this.settingsObject).then(response => {
           if(response.data === 'saved') {
-            alert('Shape is saved in resources folder');
+              if(type === 'download') {
+                let file = this.settingsObject.name+'.ttl';
+                let params =  {
+                  file: file,
+                  folder:'/shapes'
+                };
+                axios.get(`${server.baseURL}/file`,{ params: params }).then(response => {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', file); //or any other extension
+                  document.body.appendChild(link);
+                  link.click();
+                });
+              } else {
+                alert('Shape is saved in resources folder');
+              }
           }
         });
       },
