@@ -1,4 +1,5 @@
 /resources/*/*.ttl
+/resources/*/*.json
 
 # OS
 .DS_Store
