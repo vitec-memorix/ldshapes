@@ -7,10 +7,9 @@ import {
   PropertyDto,
 } from '../dto/create-shape.dto';
 import { FileService } from '../../file/file.service';
-import { GenerateShapeService } from '../generate-shape/generate-shape.service';
+import { fixupLocalUrl, getPrefixUrl } from '../../helper/transformShape';
 const shapeConfig = require('./../../../../resources/shapes/config.json');
 const N3 = require('n3');
-const { DataFactory } = N3;
 const fs = require('fs');
 
 @Injectable()
@@ -27,9 +26,10 @@ export class LoadShapeService {
       this.shapeDto.name = 'New shape';
       this.setPrefixes({});
     } else {
-      const shapeContent = await this.readShape(file);
+      const shapeContent :any = await this.readShape(file);
 
       this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
+      this.shapeDto.original = shapeContent['quads'];
       this.setPrefixes(shapeContent['prefixes']);
 
       const parents = this.getShapeParents(shapeContent['quads']);
@@ -74,10 +74,10 @@ export class LoadShapeService {
     this.prefixesById = {};
     this.shapeDto.prefix = [];
     for (const key in prefixes) {
-      this.prefixes[this.fixupLocalUrl(prefixes[key])] = key;
-      this.prefixesById[key] = this.fixupLocalUrl(prefixes[key]);
+      this.prefixes[fixupLocalUrl(prefixes[key])] = key;
+      this.prefixesById[key] = fixupLocalUrl(prefixes[key]);
       this.shapeDto.prefix.push(
-        new PrefixDto({ id: this.fixupLocalUrl(prefixes[key]), prefix: key }),
+        new PrefixDto({ id: fixupLocalUrl(prefixes[key]), prefix: key }),
       );
     }
     //for all "default" prefixes set in the config not present in the prefixes. Always add them.
@@ -150,7 +150,7 @@ export class LoadShapeService {
 
   getQuadOptions(quads, parent) {
     const shapeValues = {};
-    shapeValues['id'] = this.fixupLocalUrl(parent);
+    shapeValues['id'] = fixupLocalUrl(parent);
     shapeValues['memorixCompatible'] = false;
     shapeValues['label'] = [];
     let index = '';
@@ -179,7 +179,7 @@ export class LoadShapeService {
           case 'http://www.w3.org/2000/01/rdf-schema#comment':
           case 'http://www.w3.org/ns/shacl#datatype':
             index = quads[key].predicate.value.substr(
-              this.getPrefixUrl(quads[key].predicate.value).length,
+              getPrefixUrl(quads[key].predicate.value).length,
             );
             value = quads[key].object.value;
             if (quads[key].object.datatype !== undefined) {
@@ -199,9 +199,9 @@ export class LoadShapeService {
           case 'http://www.w3.org/ns/shacl#path':
           case 'http://www.w3.org/ns/shacl#targetClass':
             index = quads[key].predicate.value.substr(
-              this.getPrefixUrl(quads[key].predicate.value).length,
+              getPrefixUrl(quads[key].predicate.value).length,
             );
-            shapeValues[index] = this.fixupLocalUrl(quads[key].object.value);
+            shapeValues[index] = fixupLocalUrl(quads[key].object.value);
             break;
           default:
             break;
@@ -222,17 +222,5 @@ export class LoadShapeService {
         new PrefixDto({ id: this.shapeDto.shape.id + '#', prefix: 'self' }),
       );
     }
-  }
-
-  fixupLocalUrl(url) {
-    if (url.substring(0, 10) === 'undefined/') {
-      url = url.substring(9);
-    }
-    return url;
-  }
-
-  getPrefixUrl(url) {
-    const matches = url.match(/[a-z0-9]+$/i);
-    return url.substr(0, matches['index']);
   }
 }

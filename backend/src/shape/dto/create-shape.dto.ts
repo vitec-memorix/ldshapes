@@ -1,10 +1,12 @@
 class BaseShapeDto {
   id: URL;
+  original: URL;
   label: LabelDto[];
   order?: number;
   constructor(bodyValue: any = {}) {
     //set default values
     this.id = bodyValue.id;
+    this.original = bodyValue.id;
     this.label = bodyValue.label;
     this.order = bodyValue.order;
     if (bodyValue.label === undefined) {
@@ -15,6 +17,7 @@ class BaseShapeDto {
 
 export class CreateShapeDto {
   name: string;
+  original: any;
   shape: ShapeDto;
   prefix: PrefixDto[];
   group: GroupDto[];
@@ -22,6 +25,7 @@ export class CreateShapeDto {
   constructor() {
     //set default values
     this.name = '';
+    this.original = '';
     this.shape = new ShapeDto();
     this.prefix = [];
     this.group = [];
@@ -51,7 +55,6 @@ export class GroupDto extends BaseShapeDto {
 
 export class PropertyDto extends BaseShapeDto {
   path: string;
-  path_name: string;
   group: string;
   minCount: number;
   maxCount: number;
@@ -59,7 +62,6 @@ export class PropertyDto extends BaseShapeDto {
   constructor(bodyValue: any = {}) {
     super(bodyValue);
     this.path = bodyValue.path;
-    this.path_name = bodyValue.path_name;
     this.group = bodyValue.group;
     this.minCount = bodyValue.minCount;
     this.maxCount = bodyValue.maxCount;
