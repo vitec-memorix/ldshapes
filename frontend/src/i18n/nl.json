@@ -29,6 +29,7 @@
   "autofill" : "automatisch gevuld",
   "download" : "Download",
   "save" : "Opslaan",
+  "saveDownload" : "Opslaan + Download",
   "createNewResources" : {
 	 "title": "Maak nieuwe Linked Data",
 	 "create" : {
@@ -60,6 +61,7 @@
   "ChangeTitle": "Titel aanpassen",
   "AddPrefix": "Prefix toevoegen",
   "AddedPrefix": "Prefix toegevoegd",
+  "AddShape": "Shape toevoegen (ttl file)",
   "prefixNotFound": "Deze prefix is niet gevonden",
   "shapeIdRequired": "Om properties toe te voegen is een geldig id van de shape verplicht.",
   "language": {

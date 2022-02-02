@@ -89,7 +89,7 @@
                 </div>
             </draggable>
         </div>
-        <button type="button" class="btn btn-light btn-outline-dark pe-4 ps-4 me-3" v-on:click="addSettingRow('group',{'id':':group'+settings.group.length,'label':[]})">{{ $t('group.add') }}</button>
+        <button type="button" class="btn btn-light btn-outline-dark pe-4 ps-4 me-3" v-on:click="addSettingRow('group',{'id':'self:group'+settings.group.length,'label':[]})">{{ $t('group.add') }}</button>
         <button type="button" class="btn btn-light btn-outline-dark pe-4 ps-4" v-if="settings.group.length > 0" v-on:click="addSettingRow('property',{'id':'','label':[],'group':getLastGroupId()})">{{ $t('property.add') }}</button>
     </div>
 </template>

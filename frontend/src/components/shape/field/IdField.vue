@@ -164,7 +164,7 @@
             }
           });
           if(!selfPrefixExists) {
-            this.settings.prefix.push({
+            this.settings.prefix.unshift({
               'prefix':'self',
               'id':fullUrl + '#'
             });

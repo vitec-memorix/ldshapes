@@ -3,11 +3,23 @@
     > div {
       padding-top:10px;
       padding-bottom:10px;
-      border-bottom: 1px solid $border-grey;
       &.list-header {
         font-weight: bold;
         background: $light-grey;
         border-bottom: 2px solid $light-blue;
+      }
+    }
+  }
+}
+#prefix {
+  .list-view {
+    > .row:not(:first-child) {
+      border-top:1px solid #fff;
+      border-bottom:1px solid #fff;
+      &:hover {
+        border-top:1px solid $border-grey;
+        border-bottom:1px solid $border-grey;
+        background:#f7f7f7;
       }
     }
   }
