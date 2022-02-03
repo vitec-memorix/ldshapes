@@ -62,12 +62,12 @@
       validateAbsoluteIRI,
       validatePrefix,
       resetForm () {
-        this.generalConfig.prefixId = '';
+        this.generalConfig['prefixId'] = '';
         this.new_path = '';
       },
       saveValue() {
-        if(this.new_path !== '' && validateAbsoluteIRI(this.new_path) === true && this.generalConfig.prefixId !== '' && validatePrefix(this.generalConfig.prefixId) === true) {
-          this.addSettingRow('prefix', {'id': this.new_path, 'prefix': this.generalConfig.prefixId});
+        if(this.new_path !== '' && validateAbsoluteIRI(this.new_path) === true && this.generalConfig['prefixId'] !== '' && validatePrefix(this.generalConfig['prefixId']) === true) {
+          this.addSettingRow('prefix', {'id': this.new_path, 'prefix': this.generalConfig['prefixId']});
         }
         this.resetForm();
       }

@@ -92,6 +92,7 @@
       });
       let settingsObject = reactive({
         name:'',
+        original:'',
         shape:{},
         prefix:[],
         group:[],

@@ -6,21 +6,21 @@
         <div class="scrollable-content">
             <draggable class="dragArea list-group w-full m-2 mb-3" v-model="groups" handle=".grouphandle" @sort="reorderGroups">
                 <div v-for="(group, groupindex) in groups" :key="groupindex" class="row pt-2">
-                    <div class="form-group col-12 col-sm-1">
+                    <div class="col-12 col-sm-1">
                         <div class="property-button-container float-sm-start">
                             <span class="btn btn-grey btn-sm grouphandle">
                             <i class="bi-arrows-move"/>
                             </span>
                         </div>
                     </div>
-                    <div class="form-group col-10">
+                    <div class="col-12 col-sm-10">
                         <div class="row">
                             <div class="form-group col-12">
                                 <label-field :field="'group.'+groupindex+'.label'" :list="group.label" field-name="Groupname" :inline="false" />
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-12 col-sm-1">
+                    <div class="col-12 col-sm-1">
                         <div class="property-button-container float-sm-end" v-if="isGroupEmpty(group.id)">
                             <span class="btn btn-grey btn-sm" v-on:click="removeSettingRow('group',groupindex)"><i class="bi-trash"/></span>
                         </div>
@@ -39,17 +39,17 @@
                                         <span class="btn btn-grey btn-sm properyhandle"><i class="bi-arrows-move"/></span>
                                     </div>
                                 </div>
-                                <div class="form-property col-12 col-sm-10">
+                                <div class="col-12 col-sm-10">
                                     <div class="row">
                                         <label-field :field="'property.'+property.key+'.label'" :list="property.label" :inline="false" />
                                     </div>
                                     <div class="row">
-                                        <div class="form-property col-12 col-lg-5">
+                                        <div class="col-12 col-lg-5">
                                             <div class="row">
                                                 <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
                                             </div>
                                         </div>
-                                        <div class="form-property col-12 col-lg-3">
+                                        <div class="col-12 col-lg-3">
                                             <label class="form-label small-form-label">sh:datatype</label>
                                             <select v-model="property.datatype" class="form-select" >
                                                 <option v-for="(data_type, index) in shapeConfig.datatypes" :key="index" :value="index">
@@ -58,7 +58,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-property col-12 col-lg-4">
+                                        <div class="col-12 col-lg-4">
                                             <div class="row">
                                                 <div class="form-property col-12">
                                                     <label class="form-label small-form-label">{{$t('property.minMaxCount')}}</label>
@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-property col-12 col-sm-1">
+                                <div class="col-12 col-sm-1">
                                     <div class="property-button-container float-sm-end">
                                         <span class="btn btn-grey btn-sm" v-on:click="removeSettingRow('property',property.key)">
                                             <i class="bi-trash"/>
@@ -110,8 +110,8 @@
     },
     watch: {
       settings: {
-        handler(newVal:any) {
-          // sortNestedArray('order',newVal.group);
+        handler(newVal :any ) {
+          sortNestedArray('order',newVal.group);
           this.groups = newVal.group;
 
           sortNestedArray('order',newVal.property);

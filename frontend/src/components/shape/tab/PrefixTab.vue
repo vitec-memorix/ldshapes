@@ -1,22 +1,28 @@
 <template>
     <div class="scrollable-content">
         <div class="container list-view mb-3">
-            <div class="row">
-                <div class="col-sm-2 small-form-label">
+            <div class="row d-none d-md-flex">
+                <div class="col-md-2 small-form-label">
                     Prefix
                 </div>
-                <div class="col-sm-10 small-form-label">
+                <div class="col-md-10 small-form-label">
                     Path
                 </div>
             </div>
             <div v-for="(prefix, index) in settings.prefix" :key="index" class="row">
-                <div class="col-sm-2">
+                <div class="col-md-2">
+                    <div class="d-md-none small-form-label">
+                        Prefix
+                    </div>
                     {{ prefix.prefix }}
                 </div>
-                <div class="col-sm-7">
+                <div class="col-md-7">
+                    <div class="d-md-none small-form-label">
+                        Path
+                    </div>
                     {{ prefix.id }}
                 </div>
-                <div class="col-sm-3 pe-0 p-1 text-end">
+                <div class="col-md-3 pe-0 p-1 text-md-end">
                     <span class="btn btn-light btn-outline-dark ms-3 bi-trash" v-if="!isDefaultPrefix(prefix)" v-on:click="removeSettingRow('prefix',index)"></span>
                 </div>
             </div>
@@ -49,16 +55,10 @@
     methods: {
       isDefaultPrefix(value:any) {
         //you also can't remove the "self" prefix.
-        let selfPrefix = '';
-        Object.keys(this.settings.prefix).forEach(key => {
-          if(this.settings.prefix[key]['prefix'] === '') {
-            selfPrefix = this.settings.prefix[key]['id'];
-          }
-        });
-        if(value.prefix === 'self') {
+        if(value['prefix'] === 'self') {
           return true;
         }
-        return Object.values(this.shapeConfig.default_prefixes).includes(value.id);
+        return Object.values(this.shapeConfig['default_prefixes']).includes(value.id);
       }
     },
   });
