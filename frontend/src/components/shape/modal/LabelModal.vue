@@ -19,7 +19,7 @@
                             <div class="col-sm-10">
                                 <select v-model="language" class="form-select" >
                                     <option v-for="(language, index) in shapeConfig.languages" :key="index" :value="index">
-                                        {{$t('language.'+language)}}
+                                        {{ language }}
                                     </option>
                                 </select>
                             </div>
