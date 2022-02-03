@@ -58,14 +58,18 @@
     watch: {
       settings: {
         handler(newVal:any) {
-          var pList = this.field.split('.');
-          var len = pList.length;
-          for(var i = 0; i < len-1; i++) {
-            var elem = pList[i];
-            if( !newVal[elem] ) newVal[elem] = {}
-            newVal = newVal[elem];
-          }
-          this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
+          this.field_value = '';
+          //wait a second to make sure all requested field names are up to date.
+          setTimeout(()=>{
+            var pList = this.field.split('.');
+            var len = pList.length;
+            for(var i = 0; i < len-1; i++) {
+              var elem = pList[i];
+              if( !newVal[elem] ) newVal[elem] = {}
+              newVal = newVal[elem];
+            }
+            this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
+          },500);
         },
         deep:true,
       },
