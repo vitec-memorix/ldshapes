@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <h1>{{ msg }}</h1>
     <img alt="LDShapes logo" src="../../public/images/ldshapes-blue.svg" class="logo">
   </div>

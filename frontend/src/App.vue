@@ -16,20 +16,38 @@
       </div>
     </nav>
     <div class="page-content">
-      <router-view/>
+      <router-view v-if="backendOnline"/>
+      <backend-error v-if="!backendOnline"/>
     </div>
   </div>
 </template>
 <script lang="ts">
   import {defineComponent} from "vue";
+  import BackendError from "@/components/BackendError.vue";
+  import axios from "axios";
+  import {server} from "@/helper";
 
   export default defineComponent({
+    components: {
+      BackendError
+    },
     data() {
       return {
+        backendOnline:true,
         currentRoute: window.location.pathname
       }
     },
+    beforeMount() {
+      this.checkConnectionBackend();
+    },
     methods: {
+      checkConnectionBackend() {
+        axios.get(encodeURI(server.baseURL)).then(() => {
+          this.backendOnline = true;
+        }).catch(e => {
+          this.backendOnline = false;
+        });
+      },
       isActiveMenu(menu:string):string {
         if(this.currentRoute.substr(1,menu.length) === menu) {
           return ' active';

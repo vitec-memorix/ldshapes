@@ -1,5 +1,6 @@
 {
   "welcome": "Welkom bij",
+  "backendOff": "De backend is niet online.",
   "functionalityForNow": "Functionaliteit voor nu",
   "createNewShape": "Maak een shape",
   "pickShapeText": "Welke shape wil je gebruiken.",
