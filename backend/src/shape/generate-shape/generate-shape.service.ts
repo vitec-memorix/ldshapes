@@ -10,6 +10,8 @@ const { DataFactory } = N3;
 const { namedNode, literal } = DataFactory;
 const fs = require('fs');
 
+const N3Util = N3.Util;
+
 // @ts-ignore
 @Injectable()
 export class GenerateShapeService {
@@ -212,7 +214,6 @@ export class GenerateShapeService {
           ignoreOld.push(this.prefixes['sh'] + 'path');
           ignoreOld.push(this.prefixes['sh'] + 'order');
 
-
           //add labels
           Object.values(property['label']).forEach(label => {
             options.push({
@@ -260,9 +261,13 @@ export class GenerateShapeService {
             Object.values(this.originalContent.getQuads('_:' + property['id'])).forEach(val => {
               if (!ignoreOld.includes(val['predicate']['id'])) {
                 val['object']['id'] = this.replaceShapeIdChanges(fixupLocalUrl(val['object']['id']));
+                let object: any = val['object'];
+                if (N3Util.isBlankNode(val['object'])) {
+                  object = this.fillBlankNode(val['object']['id']);
+                }
                 options.push({
                   predicate: val['predicate'],
-                  object: val['object'],
+                  object: object,
                 });
               }
             });
@@ -335,7 +340,6 @@ export class GenerateShapeService {
   }
 
   fillAdditionalData(id:string, original:string, ignoreOld:any, fillBlanknode = false){
-    var N3Util = N3.Util;
     Object.values(this.originalContent.getQuads()).forEach((content:any) => {
       content.object.id = fixupLocalUrl(content.object.id);
       content.subject.id = fixupLocalUrl(content.subject.id);
@@ -348,7 +352,7 @@ export class GenerateShapeService {
           this.writer.addQuad(
             namedNode(content.subject.id),
             namedNode(content.predicate.id),
-            this.writer.list(this.contentLists[content.object.id.substr(2)]),
+            this.fillBlankNode(content.object.id),
           );
         } else {
           this.writer.addQuad(content);
@@ -364,4 +368,33 @@ export class GenerateShapeService {
     return url;
   }
 
+  fillBlankNode(id) {
+    let options = [];
+    if(this.contentLists[id.substr(2)] !== undefined) {
+      Object.keys(this.contentLists[id.substr(2)]).forEach(key => {
+        let object = this.contentLists[id.substr(2)][key];
+        if (N3Util.isBlankNode(this.contentLists[id.substr(2)][key])) {
+          object = this.fillBlankNode(this.contentLists[id.substr(2)][key]['id']);
+        }
+        options.push(object);
+      });
+
+      return this.writer.list(options);
+
+    } else {
+      Object.values(this.originalContent.getQuads(id)).forEach(val => {
+        let object = val['object'];
+        if (N3Util.isBlankNode(val['object'])) {
+          object = this.fillBlankNode(val['object']['id']);
+        }
+        object['id'] = fixupLocalUrl(object['id']);
+        options.push({
+          predicate: val['predicate'],
+          object: object,
+        });
+      });
+      return this.writer.blank(options);
+    }
+
+  }
 }
