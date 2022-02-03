@@ -84,6 +84,7 @@ export class GenerateShapeService {
 
   async addShapeGroups() {
     Object.values(this.createShapeDto.group).forEach((group :any) => {
+      group['id'] = this.shorthandToFullUrl(group['id']);
       if(!group['deleted']) {
         let ignoreOld = [];
 
@@ -184,98 +185,96 @@ export class GenerateShapeService {
   }
 
   async addShapeProperties(id) {
-
     Object.values(this.createShapeDto.property).forEach(property => {
-      let shape = this.createShapeDto.shape.id;
-      if(property['id'] !== '') {
-        shape = fixupLocalUrl(this.originalContent.getQuads(null, null, '_:' + property['id'])[0].subject.id);
-        if(this.createShapeDto.shape.id !== this.createShapeDto.shape.original) {
-          shape = shape.replace(this.createShapeDto.shape.original,this.createShapeDto.shape.id);
+      if(property !== null && property['id'] !== undefined) {
+        let shape = this.createShapeDto.shape.id;
+        if(property['id'] !== '' && property['id'] !== undefined) {
+          shape = fixupLocalUrl(this.originalContent.getQuads(null, null, '_:' + property['id'])[0].subject.id);
+          if(this.createShapeDto.shape.id !== this.createShapeDto.shape.original) {
+            shape = shape.replace(this.createShapeDto.shape.original,this.createShapeDto.shape.id);
+          }
         }
-      }
-      if(shape === id) {
-        let ignoreOld = [];
-        const options = [
-          {
-            predicate: namedNode(this.prefixes['sh'] + 'path'),
-            object: namedNode(this.shorthandToFullUrl(property['path'])),
-          },
-          {
-            predicate: namedNode(this.prefixes['sh'] + 'order'),
-            object: literal(
-              this.ordering.toFixed(1),
-              namedNode('http://www.w3.org/2001/XMLSchema#decimal'),
-            ),
-          },
-        ];
-        ignoreOld.push(this.prefixes['sh'] + 'path');
-        ignoreOld.push(this.prefixes['sh'] + 'order');
+        if(shape === id) {
+          let ignoreOld = [];
+          const options = [
+            {
+              predicate: namedNode(this.prefixes['sh'] + 'path'),
+              object: namedNode(this.shorthandToFullUrl(property['path'])),
+            },
+            {
+              predicate: namedNode(this.prefixes['sh'] + 'order'),
+              object: literal(
+                this.ordering.toFixed(1),
+                namedNode('http://www.w3.org/2001/XMLSchema#decimal'),
+              ),
+            },
+          ];
+          ignoreOld.push(this.prefixes['sh'] + 'path');
+          ignoreOld.push(this.prefixes['sh'] + 'order');
 
 
-        //add labels
-        Object.values(property['label']).forEach(label => {
-          options.push({
-            predicate: namedNode(this.prefixes['rdfs'] + 'label'),
-            object: literal(label['title'], label['language']),
+          //add labels
+          Object.values(property['label']).forEach(label => {
+            options.push({
+              predicate: namedNode(this.prefixes['rdfs'] + 'label'),
+              object: literal(label['title'], label['language']),
+            });
           });
-        });
-        ignoreOld.push(this.prefixes['rdfs'] + 'label');
+          ignoreOld.push(this.prefixes['rdfs'] + 'label');
 
-        //add group
-        for (const key in this.createShapeDto.group) {
-          if (this.createShapeDto.group[key]['id'] === property['group']) {
-            options.push({
-              predicate: namedNode(this.prefixes['sh'] + 'group'),
-              object: namedNode(this.createShapeDto.group[key]['id']),
-            });
-          }
-        }
-        ignoreOld.push(this.prefixes['sh'] + 'group');
-
-        //add named node fields when they exist
-        Object.values(['datatype']).forEach(val => {
-          if (property[val] !== undefined && property[val] !== '') {
-            options.push({
-              predicate: namedNode(this.prefixes['sh'] + val),
-              object: namedNode(property[val]),
-            });
-            ignoreOld.push(this.prefixes['sh'] + val);
-          }
-        });
-
-        //add literal fields when they exist
-        Object.values(['minCount','maxCount']).forEach(val => {
-          if (property[val] !== undefined && property[val] !== '') {
-            options.push({
-              predicate: namedNode(this.prefixes['sh'] + val),
-              object: literal(property[val]),
-            });
-            ignoreOld.push(this.prefixes['sh'] + val);
-          }
-        });
-
-        // this.fillAdditionalData(group['id'], group['original'], ignoreOld);
-        if(property['id'] !== '') {
-          Object.values(this.originalContent.getQuads('_:'+property['id'])).forEach(val => {
-            if(!ignoreOld.includes(val['predicate']['id'])) {
-              console.log(val['predicate']);
-              val['object']['id'] = this.replaceShapeIdChanges(fixupLocalUrl(val['object']['id']));
+          //add group
+          for (const key in this.createShapeDto.group) {
+            if (this.createShapeDto.group[key]['id'] === property['group']) {
               options.push({
-                predicate: val['predicate'],
-                object: val['object'],
+                predicate: namedNode(this.prefixes['sh'] + 'group'),
+                object: namedNode(this.shorthandToFullUrl(this.createShapeDto.group[key]['id'])),
               });
             }
-          });
-          // console.log(this.originalContent.getQuads('_:'+property['id']));
-        }
-        this.writer.addQuad(
-          namedNode(shape),
-          namedNode(this.prefixes['sh'] + 'property'),
-          this.writer.blank(options),
-        );
-        this.ordering++;
-      }
+          }
+          ignoreOld.push(this.prefixes['sh'] + 'group');
 
+          //add named node fields when they exist
+          Object.values(['datatype']).forEach(val => {
+            if (property[val] !== undefined && property[val] !== '') {
+              options.push({
+                predicate: namedNode(this.prefixes['sh'] + val),
+                object: namedNode(property[val]),
+              });
+              ignoreOld.push(this.prefixes['sh'] + val);
+            }
+          });
+
+          //add literal fields when they exist
+          Object.values(['minCount', 'maxCount']).forEach(val => {
+            if (property[val] !== undefined && property[val] !== '') {
+              options.push({
+                predicate: namedNode(this.prefixes['sh'] + val),
+                object: literal(property[val]),
+              });
+              ignoreOld.push(this.prefixes['sh'] + val);
+            }
+          });
+
+          // this.fillAdditionalData(group['id'], group['original'], ignoreOld);
+          if (property['id'] !== '') {
+            Object.values(this.originalContent.getQuads('_:' + property['id'])).forEach(val => {
+              if (!ignoreOld.includes(val['predicate']['id'])) {
+                val['object']['id'] = this.replaceShapeIdChanges(fixupLocalUrl(val['object']['id']));
+                options.push({
+                  predicate: val['predicate'],
+                  object: val['object'],
+                });
+              }
+            });
+          }
+          this.writer.addQuad(
+            namedNode(shape),
+            namedNode(this.prefixes['sh'] + 'property'),
+            this.writer.blank(options),
+          );
+          this.ordering++;
+        }
+      }
     });
   }
 
@@ -324,6 +323,9 @@ export class GenerateShapeService {
   }
 
   shorthandToFullUrl(url) {
+    if(url === undefined) {
+      return url;
+    }
     Object.keys(this.prefixes).forEach(key => {
       if(url.substr(0,key.length+1) === `${key}:`) {
         url = `${this.prefixes[key]}${url.substr( key.length + 1)}`
