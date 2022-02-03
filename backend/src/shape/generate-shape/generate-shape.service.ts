@@ -225,7 +225,7 @@ export class GenerateShapeService {
 
           //add group
           for (const key in this.createShapeDto.group) {
-            if (this.createShapeDto.group[key]['id'] === property['group']) {
+            if (this.createShapeDto.group[key]['id'] === this.shorthandToFullUrl(property['group'])) {
               options.push({
                 predicate: namedNode(this.prefixes['sh'] + 'group'),
                 object: namedNode(this.shorthandToFullUrl(this.createShapeDto.group[key]['id'])),
