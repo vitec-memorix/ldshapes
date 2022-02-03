@@ -145,7 +145,7 @@
         },1000)
       },
       saveOldId() {
-        if (this.field === 'shape.id') {
+        if (this.field === 'shape.id' && this.settings['shape']['id'] !== undefined) {
           this.oldId = this.getFullIri(this.settings['shape']['id']);
         }
       },
