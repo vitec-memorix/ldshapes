@@ -142,19 +142,6 @@ export class GenerateShapeService {
     );
     ignoreOld.push(this.prefixes['sh'] + 'targetClass');
 
-    // this.addNamedNode(
-    //   this.prefixes['dash'] + 'defaultViewForRole',
-    //   this.prefixes['dash'] + 'all',
-    // );
-    // ignoreOld.push(this.prefixes['dash'] + 'defaultViewForRole');
-
-    // this.writer.addQuad(
-    //   namedNode(this.createShapeDto.shape.id),
-    //   namedNode(this.prefixes['sh'] + 'ignoredProperties'),
-    //   self.writer.list([namedNode(this.prefixes['rdf'] + 'type')]),
-    // );
-    // ignoreOld.push(this.prefixes['sh'] + 'ignoredProperties');
-
     Object.values(this.createShapeDto.shape.label).forEach(label => {
       this.addLiteral(
         this.prefixes['rdfs'] + 'label',
