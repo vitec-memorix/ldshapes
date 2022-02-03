@@ -1,5 +1,5 @@
 <template>
-    <id-field field="shape.id" :value="settings.shape.id" />
+    <id-field field="shape.id" />
     <label-field field="shape.label" :list="settings.shape.label" />
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">dc:identifier</label>
@@ -8,7 +8,7 @@
             <ErrorMessage name="dc_identifier" class="error-message" />
        </div>
     </div>
-    <id-field field="shape.targetClass" fieldName="sh:targetClass" :value="settings.shape.targetClass" />
+    <id-field field="shape.targetClass" fieldName="sh:targetClass" />
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">rdfs:comment</label>
         <div class="col-sm-10">

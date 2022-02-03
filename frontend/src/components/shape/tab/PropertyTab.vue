@@ -46,7 +46,7 @@
                                     <div class="row">
                                         <div class="col-12 col-lg-5">
                                             <div class="row">
-                                                <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path" :value="property.path"  :inline="false" />
+                                                <id-field :field="'property.'+property.key+'.path'" fieldName="sh:path"  :inline="false" />
                                             </div>
                                         </div>
                                         <div class="col-12 col-lg-3">
@@ -66,10 +66,10 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-property col-6">
-                                                    <input type="number" v-model="property.minCount" class="form-control" :placeholder="0">
+                                                    <input type="number" v-model="property.minCount" class="form-control">
                                                 </div>
                                                 <div class="form-property col-6">
-                                                    <input type="number" v-model="property.maxCount" class="form-control" :placeholder="1">
+                                                    <input type="number" v-model="property.maxCount" class="form-control">
                                                 </div>
                                             </div>
                                         </div>

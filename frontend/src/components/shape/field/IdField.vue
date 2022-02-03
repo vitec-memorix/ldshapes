@@ -37,9 +37,6 @@
         type: String,
         default: 'id'
       },
-      value: {
-        type: String,
-      },
       inline: {
         type: Boolean,
         default: true
@@ -48,7 +45,7 @@
     data() {
       const prefixesCC: { [key: string]: any[] } = {};
       return {
-        field_value:this.value,
+        field_value:'',
         prefixesCC,
         prefixId:'',
         savedPrefix:false,
@@ -56,25 +53,24 @@
       }
     },
     watch: {
+      field: {
+        handler() {
+          this.field_value = '';
+          setTimeout(()=>{
+            this.setFieldValue(this.field);
+          },200)
+        },
+      },
       settings: {
-        handler(newVal:any) {
-          var pList = this.field.split('.');
-          var len = pList.length;
-          for(var i = 0; i < len-1; i++) {
-            var elem = pList[i];
-            if( !newVal[elem] ) newVal[elem] = {}
-            newVal = newVal[elem];
-          }
-          this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
+        handler() {
+          this.setFieldValue(this.field);
         },
         deep:true,
       },
     },
     mounted() {
       this.setPrefixes();
-      if(this.field_value !== undefined) {
-        this.field_value = this.getShorthandFromFullUrl(this.field_value);
-      }
+      this.setFieldValue(this.field);
     },
     setup() {
       const settings :any = inject('settings');
@@ -93,6 +89,17 @@
     },
     methods: {
       validateAbsoluteIRI,
+      setFieldValue(field :string) {
+        var pList = field.split('.');
+        var newVal = this.settings;
+        var len = pList.length;
+        for(var i = 0; i < len-1; i++) {
+          var elem = pList[i];
+          if( !newVal[elem] ) newVal[elem] = {}
+          newVal = newVal[elem];
+        }
+        this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
+      },
       checkForValidPrefixes() {
         if(this.field_value !== undefined) {
           const matches: string[]|null = this.field_value.match(/^([a-z][a-z0-9]+):[a-zA-Z]/);
