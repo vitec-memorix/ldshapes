@@ -181,10 +181,6 @@
               this.settings['property'][key]['group'] = fullUrl + this.settings['property'][key]['group'].substr(this.oldId.length);
             }
           });
-
-          // console.log(this.settings['group']);
-          // console.log(this.settings['property']);
-
           if(!selfPrefixExists) {
             this.settings['prefix'].unshift({
               'prefix':'self',
