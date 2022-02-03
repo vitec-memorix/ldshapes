@@ -65,6 +65,15 @@ npm run build
 npm run lint
 ```
 
+## Configuration Shape Creator
+
+The Shape creator uses a small configuration file (json) to fill lists and default prefixes.
+
+This configuration file is located in "/resources" and named "config.json". 
+If needed you can add (or remove) your own values to choose from.
+
+Be carefull of which default prefixes you remove. Most are needed for a proper Shape when starting from scratch.
+
 ## Cli
 
 This tool uses @squareboat/nest-console for running scripts from the command line.

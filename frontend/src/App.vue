@@ -11,12 +11,6 @@
             <li class="nav-item" :class="isActiveMenu('shape')">
               <a class="nav-link" href="/shape/pick"><span class="bi-grid"></span>Shape creator</a>
             </li>
-            <li class="nav-item" :class="isActiveMenu('transformer')">
-              <a class="nav-link" href="/transformer/index"><span class="bi-share"></span>LD Transformer</a>
-            </li>
-            <li class="nav-item navbar-right" :class="isActiveMenu('config')">
-              <a class="nav-link" href="/config/index"><span class="bi-gear"></span>Config</a>
-            </li>
           </ul>
         </div>
       </div>

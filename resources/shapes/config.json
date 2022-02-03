@@ -9,8 +9,7 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "dash": "http://datashapes.org/dash#",
-    "memorix": "http://memorix.io/ontology#"
+    "dash": "http://datashapes.org/dash#"
   },
   "datatypes" : {
     "http://www.w3.org/2001/XMLSchema#string": "xsd:string",
