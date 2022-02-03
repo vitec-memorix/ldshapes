@@ -28,6 +28,7 @@ export class GenerateShapeService {
 
   async create(createShapeDto: CreateShapeDto) {
     const self = this;
+    this.prefixes = {};
 
     this.createShapeDto = createShapeDto;
 
