@@ -17,6 +17,15 @@
     </div>
     <div class="row mb-3">
         <div class="col-sm-10 offset-sm-2">
+            <div class="form-check form-switch d-inline-block pt-1 pb-1">
+                <input class="form-check-input" v-model="settings.shape.closed" type="checkbox" id="flexSwitchCheckDefault" :checked="settings.shape.closed === true">
+                <label class="form-check-label" for="flexSwitchCheckDefault">{{ $t('isClosed') }}</label>
+            </div>
+            <button class="btn btn-light btn-outline-dark btn-sm ms-2 pe-2 pt-1 pb-1 ps-2" type="button" v-if="settings.shape.closed" data-bs-toggle="modal" data-bs-target="#ignoredPropertiesModal">Alter exceptions</button>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-10 offset-sm-2">
             <div class="form-check form-switch">
                 <input class="form-check-input" v-model="settings.shape.memorixCompatible" type="checkbox" id="flexSwitchCheckDefault" :checked="settings.shape.memorixCompatible === true">
                 <label class="form-check-label" for="flexSwitchCheckDefault">{{ $t('memorixCompatible') }}</label>

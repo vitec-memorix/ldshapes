@@ -4,12 +4,15 @@
             {{fieldName}}
         </label>
         <div class="position-relative" :class="inline === true ? 'col-sm-10' : ''">
-            <Field type="text" :name="'idfield_'+field" @focus="saveOldId" @blur="addSelfPrefixById" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
+            <Field type="text" :name="'idfield_'+field" @focus="saveOldId" @blur="addSelfPrefixById" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateValue" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
             <ErrorMessage :name="'idfield_'+field" class="error-message" />
             <span v-if="savedPrefix" :id="'add-prefix-warning-'+field" class="bg-success text-white prefix-warning">{{ $t('AddedPrefix') }}</span>
             <div v-if="!checkForValidPrefixes()" class="mt-2">
                 {{ $t('prefixNotFound') }}
                 <button class="btn btn-light btn-outline-dark btn-sm" type="button" data-bs-toggle="modal" @click="updateSettingField('prefixId',prefixId)" data-bs-target="#rdfsPrefixModal">Add prefix</button>
+            </div>
+            <div v-if="altertype==='add'">
+            <button type="button" class="btn btn-primary mt-3" @click="saveNewValue">{{$t('button.add')}}</button>
             </div>
         </div>
     </div>
@@ -32,6 +35,10 @@
       field: {
         type: String,
         required:true,
+      },
+      altertype: {
+        type: String,
+        default: 'update'
       },
       fieldName: {
         type: String,
@@ -75,30 +82,36 @@
     setup() {
       const settings :any = inject('settings');
       const updateSettingField = inject(updateSettingFieldKey);
+      const addSettingRow = inject(addSettingRowKey);
       const getFullIri = inject(getFullIriKey);
+      const getShorthandFromFullIri = inject(getShorthandFromFullIriKey);
 
-      if (getFullIri === undefined) {
+      if (getFullIri === undefined || addSettingRow === undefined || updateSettingField === undefined || getShorthandFromFullIri === undefined) {
         throw new Error('Failed to inject function');
       }
 
       return {
         updateSettingField,
+        addSettingRow,
         getFullIri,
+        getShorthandFromFullIri,
         settings,
       };
     },
     methods: {
       validateAbsoluteIRI,
       setFieldValue(field :string) {
-        var pList = field.split('.');
-        var newVal = this.settings;
-        var len = pList.length;
-        for(var i = 0; i < len-1; i++) {
-          var elem = pList[i];
-          if( !newVal[elem] ) newVal[elem] = {}
-          newVal = newVal[elem];
+        if(this.altertype === 'update') {
+          var pList = field.split('.');
+          var newVal = this.settings;
+          var len = pList.length;
+          for (var i = 0; i < len - 1; i++) {
+            var elem = pList[i];
+            if (!newVal[elem]) newVal[elem] = {}
+            newVal = newVal[elem];
+          }
+          this.field_value = this.getShorthandFromFullIri(newVal[pList[len - 1]]);
         }
-        this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
       },
       checkForValidPrefixes() {
         if(this.field_value !== undefined) {
@@ -192,6 +205,17 @@
           }
         }
       },
+      updateValue() {
+        if(this.altertype === 'update') {
+          this.updateSettingField(this.field, this.field_value);
+        }
+      },
+      saveNewValue() {
+        if(this.field_value !== '' && validateAbsoluteIRI(this.field_value) === true) {
+          this.addSettingRow(this.field, this.getFullIri(this.field_value));
+          this.field_value = '';
+        }
+      }
     },
   });
 </script>

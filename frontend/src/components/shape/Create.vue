@@ -39,6 +39,7 @@
                 <title-modal :title="$t('ChangeTitle')"/>
                 <label-modal :title="$t('AddLabel')"/>
                 <prefix-modal />
+                <ignored-properties-modal />
             </Form>
         </div>
     </div>
@@ -54,6 +55,7 @@
   import TitleModal from './modal/TitleModal.vue';
   import LabelModal from './modal/LabelModal.vue';
   import PrefixModal from './modal/PrefixModal.vue';
+  import IgnoredPropertiesModal from './modal/IgnoredPropertiesModal.vue';
   import { Form } from 'vee-validate';
   import config from '../../../../resources/shapes/config.json';
 
@@ -69,6 +71,7 @@
       TitleModal,
       LabelModal,
       PrefixModal,
+      IgnoredPropertiesModal,
       Form },
     data() {
       return {

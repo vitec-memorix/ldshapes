@@ -38,12 +38,16 @@ export class ShapeDto extends BaseShapeDto {
   targetClass: string;
   memorixCompatible: boolean;
   comment: string;
+  closed: boolean;
+  ignoredProperties: string[];
   constructor(bodyValue: any = {}) {
     super(bodyValue);
     this.identifier = bodyValue.identifier;
     this.targetClass = bodyValue.targetClass;
     this.memorixCompatible = bodyValue.memorixCompatible;
     this.comment = bodyValue.comment;
+    this.closed = bodyValue.closed;
+    this.ignoredProperties = bodyValue.ignoredProperties;
   }
 }
 
