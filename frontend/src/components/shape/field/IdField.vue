@@ -20,7 +20,7 @@
   import axios from "axios";
   import {validateAbsoluteIRI} from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
-  import {updateSettingFieldKey, getFullIriKey} from "@/symbols/shape";
+  import {updateSettingFieldKey, getFullIriKey, addSettingRowKey, getShorthandFromFullIriKey} from "@/symbols/shape";
 
   export default defineComponent({
     name: 'IdField',
@@ -191,24 +191,6 @@
             });
           }
         }
-      },
-      getShorthandFromFullUrl(url :string) {
-        if(url === undefined){
-          return url;
-        }
-        let newUrl = url;
-        let prevPrefix = '';
-        let prevLength = 0;
-        Object.keys(this.settings['prefix']).forEach(key => {
-          const id = this.settings['prefix'][key]['id'];
-          const prefix = this.settings['prefix'][key]['prefix'];
-          if(id === url.substr(0,id.length) && (prevPrefix === '' || prevPrefix === 'self'  || id.length > prevLength)) {
-            newUrl = prefix + ':' + url.substr(id.length);
-            prevPrefix = prefix;
-            prevLength = id.length;
-          }
-        });
-        return newUrl;
       },
     },
   });

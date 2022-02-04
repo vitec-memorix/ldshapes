@@ -7,4 +7,6 @@ export type RemoveSettingRowFunction = (field: string, index: number) => void;
 
 export type GetFullIriFunction = (iri: string) => string;
 
+export type GetShorthandFromFullIriFunction = (iri: string) => string;
+
 export type FetchShapesFunction = () => void;

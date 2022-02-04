@@ -57,8 +57,8 @@
   import { Form } from 'vee-validate';
   import config from '../../../../resources/shapes/config.json';
 
-  import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction, GetFullIriFunction } from "@/types/shape";
-  import { updateSettingFieldKey, addSettingRowKey, removeSettingRowKey, getFullIriKey } from "@/symbols/shape";
+  import { UpdateSettingFieldFunction, AddSettingRowFunction, RemoveSettingRowFunction, GetFullIriFunction, GetShorthandFromFullIriFunction } from "@/types/shape";
+  import { updateSettingFieldKey, addSettingRowKey, removeSettingRowKey, getFullIriKey, getShorthandFromFullIriKey } from "@/symbols/shape";
 
   export default defineComponent({
     name: 'ShapeCreate',
@@ -157,6 +157,26 @@
         return iri;
       }
 
+      const getShorthandFromFullIri: GetShorthandFromFullIriFunction = function (iri :string) {
+        if(iri === undefined){
+          return iri;
+        }
+        let newIri = iri;
+        let prevPrefix = '';
+        let prevLength = 0;
+        Object.keys(settingsObject['prefix']).forEach(number => {
+          const key :any = number;
+          const id :string = settingsObject['prefix'][key]['id'];
+          const prefix :string = settingsObject['prefix'][key]['prefix'];
+          if(id === iri.substr(0,id.length) && (prevPrefix === '' || prevPrefix === 'self'  || id.length > prevLength)) {
+            newIri = prefix + ':' + iri.substr(id.length);
+            prevPrefix = prefix;
+            prevLength = id.length;
+          }
+        });
+        return newIri;
+      }
+
       provide("settings", settingsObject);
       provide("generalConfig", generalConfig);
       provide("shapeConfig", config);
@@ -164,6 +184,7 @@
       provide(addSettingRowKey, addSettingRow);
       provide(removeSettingRowKey, removeSettingRow);
       provide(getFullIriKey, getFullIri);
+      provide(getShorthandFromFullIriKey, getShorthandFromFullIri);
 
       return {
         settingsObject,
