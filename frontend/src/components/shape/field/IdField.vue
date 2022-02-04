@@ -172,15 +172,15 @@
           });
           //and change the paths for all properties and groups that need changing.
           Object.keys(this.settings['group']).forEach(key => {
-            if(this.settings['group'][key]['id'].substr(0,this.oldId.length)) {
+            if(this.settings['group'][key]['id'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['group'][key]['id'] = fullUrl + this.settings['group'][key]['id'].substr(this.oldId.length);
             }
           });
           Object.keys(this.settings['property']).forEach(key => {
-            if(this.settings['property'][key]['path'].substr(0,this.oldId.length)) {
+            if(this.settings['property'][key]['path'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['property'][key]['path'] = fullUrl + this.settings['property'][key]['path'].substr(this.oldId.length);
             }
-            if(this.settings['property'][key]['group'] !== undefined && this.settings['property'][key]['group'].substr(0,this.oldId.length)) {
+            if(this.settings['property'][key]['group'] !== undefined && this.settings['property'][key]['group'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['property'][key]['group'] = fullUrl + this.settings['property'][key]['group'].substr(this.oldId.length);
             }
           });
