@@ -28,6 +28,7 @@ export class GenerateShapeService {
 
   async create(createShapeDto: CreateShapeDto) {
     const self = this;
+    this.prefixes = {};
 
     this.createShapeDto = createShapeDto;
 
@@ -163,8 +164,21 @@ export class GenerateShapeService {
     );
     ignoreOld.push(this.prefixes['dc'] + 'identifier');
 
-    this.addLiteral(this.prefixes['sh'] + 'closed', true);
-    ignoreOld.push(this.prefixes['sh'] + 'closed');
+    if(this.createShapeDto.shape.closed === true || self.createShapeDto.shape.memorixCompatible === true) {
+      this.addLiteral(this.prefixes['sh'] + 'closed', true);
+    }
+
+    if(this.createShapeDto.shape.ignoredProperties.length > 0) {
+      Object.keys(this.createShapeDto.shape.ignoredProperties).forEach(key => {
+        this.createShapeDto.shape.ignoredProperties[key] = namedNode(this.shorthandToFullUrl(this.createShapeDto.shape.ignoredProperties[key]));
+      });
+    }
+    this.writer.addQuad(
+      namedNode(this.createShapeDto.shape.id),
+      namedNode(this.prefixes['sh'] + 'ignoredProperties'),
+      self.writer.list(this.createShapeDto.shape.ignoredProperties),
+    );
+    ignoreOld.push(this.prefixes['sh'] + 'ignoredProperties');
 
     ignoreOld.push(this.prefixes['sh'] + 'property');
 

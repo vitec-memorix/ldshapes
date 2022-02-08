@@ -1,7 +1,7 @@
 <template>
     <div class="scrollable-content">
         <div class="container list-view mb-3">
-            <div class="row d-none d-md-flex">
+            <div class="row d-none d-md-flex header-row">
                 <div class="col-md-2 small-form-label">
                     Prefix
                 </div>

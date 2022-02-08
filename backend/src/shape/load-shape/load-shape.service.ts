@@ -17,6 +17,8 @@ export class LoadShapeService {
   prefixes = {};
   prefixesById = {};
   shapeParents = {};
+  originalContent;
+  contentLists;
   quads;
   shapeDto = new CreateShapeDto();
 
@@ -27,6 +29,8 @@ export class LoadShapeService {
       this.setPrefixes({});
     } else {
       const shapeContent :any = await this.readShape(file);
+      this.originalContent = new N3.Store(shapeContent['quads']);
+      this.contentLists = this.originalContent.extractLists()
 
       this.shapeDto.name = file.replace(/\.[^/.]+$/, '');
       this.shapeDto.original = shapeContent['quads'];
@@ -202,6 +206,17 @@ export class LoadShapeService {
               getPrefixUrl(quads[key].predicate.value).length,
             );
             shapeValues[index] = fixupLocalUrl(quads[key].object.value);
+            break;
+          case 'http://www.w3.org/ns/shacl#closed':
+            shapeValues['closed'] = quads[key].object.value;
+            break;
+          case 'http://www.w3.org/ns/shacl#ignoredProperties':
+            shapeValues['ignoredProperties'] = [];
+            if(this.contentLists[quads[key].object.value] !== undefined) {
+              Object.values(this.contentLists[quads[key].object.value]).forEach(value => {
+                shapeValues['ignoredProperties'].push(value['id']);
+              });
+            }
             break;
           default:
             break;

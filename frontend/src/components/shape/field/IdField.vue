@@ -4,12 +4,15 @@
             {{fieldName}}
         </label>
         <div class="position-relative" :class="inline === true ? 'col-sm-10' : ''">
-            <Field type="text" :name="'idfield_'+field" @focus="saveOldId" @blur="addSelfPrefixById" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateSettingField(field, field_value)" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
+            <Field type="text" :name="'idfield_'+field" @focus="saveOldId" @blur="addSelfPrefixById" v-model="field_value" @keyup="checkForValidPrefixes" @input="updateValue" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')"/>
             <ErrorMessage :name="'idfield_'+field" class="error-message" />
             <span v-if="savedPrefix" :id="'add-prefix-warning-'+field" class="bg-success text-white prefix-warning">{{ $t('AddedPrefix') }}</span>
             <div v-if="!checkForValidPrefixes()" class="mt-2">
                 {{ $t('prefixNotFound') }}
                 <button class="btn btn-light btn-outline-dark btn-sm" type="button" data-bs-toggle="modal" @click="updateSettingField('prefixId',prefixId)" data-bs-target="#rdfsPrefixModal">Add prefix</button>
+            </div>
+            <div v-if="altertype==='add'">
+            <button type="button" class="btn btn-primary mt-3" @click="saveNewValue">{{$t('button.add')}}</button>
             </div>
         </div>
     </div>
@@ -20,7 +23,7 @@
   import axios from "axios";
   import {validateAbsoluteIRI} from '@/mixins/validateShape';
   import { ErrorMessage, Field } from 'vee-validate';
-  import {updateSettingFieldKey, getFullIriKey} from "@/symbols/shape";
+  import {updateSettingFieldKey, getFullIriKey, addSettingRowKey, getShorthandFromFullIriKey} from "@/symbols/shape";
 
   export default defineComponent({
     name: 'IdField',
@@ -33,12 +36,13 @@
         type: String,
         required:true,
       },
+      altertype: {
+        type: String,
+        default: 'update'
+      },
       fieldName: {
         type: String,
         default: 'id'
-      },
-      value: {
-        type: String,
       },
       inline: {
         type: Boolean,
@@ -48,7 +52,7 @@
     data() {
       const prefixesCC: { [key: string]: any[] } = {};
       return {
-        field_value:this.value,
+        field_value:'',
         prefixesCC,
         prefixId:'',
         savedPrefix:false,
@@ -56,47 +60,59 @@
       }
     },
     watch: {
-      settings: {
-        handler(newVal:any) {
+      field: {
+        handler() {
           this.field_value = '';
-          //wait a second to make sure all requested field names are up to date.
           setTimeout(()=>{
-            var pList = this.field.split('.');
-            var len = pList.length;
-            for(var i = 0; i < len-1; i++) {
-              var elem = pList[i];
-              if( !newVal[elem] ) newVal[elem] = {}
-              newVal = newVal[elem];
-            }
-            this.field_value = this.getShorthandFromFullUrl(newVal[pList[len-1]]);
-          },500);
+            this.setFieldValue(this.field);
+          },200)
+        },
+      },
+      settings: {
+        handler() {
+          this.setFieldValue(this.field);
         },
         deep:true,
       },
     },
     mounted() {
       this.setPrefixes();
-      if(this.field_value !== undefined) {
-        this.field_value = this.getShorthandFromFullUrl(this.field_value);
-      }
+      this.setFieldValue(this.field);
     },
     setup() {
       const settings :any = inject('settings');
       const updateSettingField = inject(updateSettingFieldKey);
+      const addSettingRow = inject(addSettingRowKey);
       const getFullIri = inject(getFullIriKey);
+      const getShorthandFromFullIri = inject(getShorthandFromFullIriKey);
 
-      if (getFullIri === undefined) {
+      if (getFullIri === undefined || addSettingRow === undefined || updateSettingField === undefined || getShorthandFromFullIri === undefined) {
         throw new Error('Failed to inject function');
       }
 
       return {
         updateSettingField,
+        addSettingRow,
         getFullIri,
+        getShorthandFromFullIri,
         settings,
       };
     },
     methods: {
       validateAbsoluteIRI,
+      setFieldValue(field :string) {
+        if(this.altertype === 'update') {
+          var pList = field.split('.');
+          var newVal = this.settings;
+          var len = pList.length;
+          for (var i = 0; i < len - 1; i++) {
+            var elem = pList[i];
+            if (!newVal[elem]) newVal[elem] = {}
+            newVal = newVal[elem];
+          }
+          this.field_value = this.getShorthandFromFullIri(newVal[pList[len - 1]]);
+        }
+      },
       checkForValidPrefixes() {
         if(this.field_value !== undefined) {
           const matches: string[]|null = this.field_value.match(/^([a-z][a-z0-9]+):[a-zA-Z]/);
@@ -169,15 +185,15 @@
           });
           //and change the paths for all properties and groups that need changing.
           Object.keys(this.settings['group']).forEach(key => {
-            if(this.settings['group'][key]['id'].substr(0,this.oldId.length)) {
+            if(this.settings['group'][key]['id'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['group'][key]['id'] = fullUrl + this.settings['group'][key]['id'].substr(this.oldId.length);
             }
           });
           Object.keys(this.settings['property']).forEach(key => {
-            if(this.settings['property'][key]['path'].substr(0,this.oldId.length)) {
+            if(this.settings['property'][key]['path'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['property'][key]['path'] = fullUrl + this.settings['property'][key]['path'].substr(this.oldId.length);
             }
-            if(this.settings['property'][key]['group'] !== undefined && this.settings['property'][key]['group'].substr(0,this.oldId.length)) {
+            if(this.settings['property'][key]['group'] !== undefined && this.settings['property'][key]['group'].substr(0,this.oldId.length) === this.oldId) {
               this.settings['property'][key]['group'] = fullUrl + this.settings['property'][key]['group'].substr(this.oldId.length);
             }
           });
@@ -189,24 +205,17 @@
           }
         }
       },
-      getShorthandFromFullUrl(url :string) {
-        if(url === undefined){
-          return url;
+      updateValue() {
+        if(this.altertype === 'update') {
+          this.updateSettingField(this.field, this.field_value);
         }
-        let newUrl = url;
-        let prevPrefix = '';
-        let prevLength = 0;
-        Object.keys(this.settings['prefix']).forEach(key => {
-          const id = this.settings['prefix'][key]['id'];
-          const prefix = this.settings['prefix'][key]['prefix'];
-          if(id === url.substr(0,id.length) && (prevPrefix === '' || prevPrefix === 'self'  || id.length > prevLength)) {
-            newUrl = prefix + ':' + url.substr(id.length);
-            prevPrefix = prefix;
-            prevLength = id.length;
-          }
-        });
-        return newUrl;
       },
+      saveNewValue() {
+        if(this.field_value !== '' && validateAbsoluteIRI(this.field_value) === true) {
+          this.addSettingRow(this.field, this.getFullIri(this.field_value));
+          this.field_value = '';
+        }
+      }
     },
   });
 </script>

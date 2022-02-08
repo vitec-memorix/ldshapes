@@ -18,7 +18,7 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Path</label>
                             <div class="col-sm-10">
-                                <Field type="text" v-model="new_path" name="new-prefix-id" :rules="validateAbsoluteIRI" class="form-control" :placeholder="$t('iri')" />
+                                <Field type="text" v-model="new_path" name="new-prefix-id" :rules="validateAbsoluteIRI" class="form-control" placeholder="Iri" />
                                 <ErrorMessage name="new-prefix-id" class="error-message" />
                             </div>
                         </div>

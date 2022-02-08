@@ -1,5 +1,6 @@
 {
   "welcome": "Welkom bij",
+  "backendOff": "De backend is niet online.",
   "functionalityForNow": "Functionaliteit voor nu",
   "createNewShape": "Maak een shape",
   "pickShapeText": "Welke shape wil je gebruiken.",
@@ -25,6 +26,7 @@
     "path" : "Property path"
   },
   "memorixCompatible" : "Shape is voor Memorix",
+  "isClosed": "Shape is closed",
   "nexttab" : "Volgende tab",
   "autofill" : "automatisch gevuld",
   "download" : "Download",
@@ -64,10 +66,6 @@
   "AddShape": "Shape toevoegen (ttl file)",
   "prefixNotFound": "Deze prefix is niet gevonden",
   "shapeIdRequired": "Om properties toe te voegen is een geldig id van de shape verplicht.",
-  "language": {
-    "Dutch" : "Nederlands",
-    "English" : "Engels"
-  },
   "button" : {
     "add" : "Toevoegen",
     "cancel" : "Annuleren"
