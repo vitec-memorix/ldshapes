@@ -10,17 +10,17 @@ LDShapes is a software tool used to define rdf-based data structures and transfo
 ### Using Docker
 The easiest way to use LDShapes is using the provided Dockerfile. 
 
-### Using Docker compose
-`docker-compose up`
-
-#### Pulling the image from Docker Hub:
-`docker run -d -p 8080:80 -v ldshapes:/var/lib/ldshapes/ mlindeman/ldshapes`
-
 #### Building the image locally
 ```bash
 docker buildx build -t ldshapes Docker/
 docker run -d -p 8080:80 -v ldshapes:/var/lib/ldshapes/ ldshapes
 ```
+
+#### Running the image Using Docker compose
+`docker-compose up`
+
+#### Running the image directly:
+`docker run -d -p 8080:80 -v ldshapes:/var/lib/ldshapes/ sldshapes`
 
 
 make sure you use node >= 10.13.0, except for v13
