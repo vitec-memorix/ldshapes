@@ -1,0 +1,13 @@
+version: '3.0'
+
+volumes:
+  ldshapes:
+
+services:
+  ldshapes:
+    image: mlindeman/ldshapes
+    ports:
+      - 8080:80
+    volumes:
+      - ldshapes:/var/lib/ldshapes/
+
