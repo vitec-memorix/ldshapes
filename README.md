@@ -34,7 +34,7 @@ $ npm run start:prod
 ```
 
 ### For running the frontend (Run in a separate cmd)
-```
+```bash
 cd frontend
 
 npm run serve
@@ -56,12 +56,12 @@ $ npm run test:cov
 ```
 
 ### Frontend Compiles and minifies for production
-```
+```bash
 npm run build
 ```
 
 ### Frontend Lints and fixes files
-```
+```bash
 npm run lint
 ```
 
@@ -74,14 +74,89 @@ If needed you can add (or remove) your own values to choose from.
 
 Be carefull of which default prefixes you remove. Most are needed for a proper Shape when starting from scratch.
 
-## Cli
+## Creating a mapping
+To transform your data to rdf, you need an [rml](https://rml.io/specs/rml/) mapping.
 
-This tool uses @squareboat/nest-console for running scripts from the command line.
+The mapping should be put in the `/resources/mappings/` folder.
 
-To list all commands use:
-```bash
-node cli list
+Example:
+```turtle
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix schema: <http://schema.org/> .
+@prefix fno: <http://w3id.org/function/ontology#> .
+
+@base <http://example.com/base/> .
+
+<TriplesMap1>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "<absolute-path-to-data-source>";
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.persons[*]"
+  ];
+    
+    rr:subjectMap [ 
+        rml:reference "firstName";
+        rr:termType rr:IRI;
+    ];
+    
+     rr:predicateObjectMap [
+     	rr:predicate rdf:type;
+     	rr:object foaf:Person;
+     ];
+
+     rr:predicateObjectMap [
+         rr:predicate foaf:givenName;
+         rr:objectMap [ rml:reference "firstName" ];
+     ];
+    
+     rr:predicateObjectMap [
+         rr:predicate foaf:familyName;
+         rr:objectMap [ rml:reference "lastName" ];
+     ];
 ```
 
-To add commands see https://github.com/squareboat/nest-console
+## Transforming data with the cli
 
+```bash
+cd backend
+
+npm run cli:dev -- transform --mapping <name> --output <name>
+```
+
+```bash
+-m, --mapping <name>        the mapping file in `/resources/mappings/`
+-o, --output <name>         the output file that will be placed in `/resources/rdf/`
+```
+
+Example:
+```bash
+cd backend
+
+npm run cli:dev -- transform --mapping person-mapping.ttl --output persons.n3
+```
+## Validating RDF with the cli
+```bash
+cd backend
+
+npm run cli:dev -- validate --rdf <name> --shape <name>
+```
+
+```bash
+-r, --rdf <name>            the name of the rdf file in `/resources/rdf/`
+-s, --shape <name>          the name of the shape file in `/resources/shapes/`
+```
+
+Example:
+```bash
+cd backend
+
+npm run cli:dev -- validate --rdf persons.n3 --shape person-shape.ttl
+```

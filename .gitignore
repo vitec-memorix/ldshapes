@@ -1,6 +1,7 @@
 /resources/*/*.ttl
 /resources/*/*.json
 /resources/*/*.n3
+/resources/*/*.csv
 
 # OS
 .DS_Store
