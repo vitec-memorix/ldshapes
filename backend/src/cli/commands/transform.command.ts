@@ -36,7 +36,7 @@ export class TransformCommand implements CommandRunner {
       If you want n-quads instead of json as output,
       you need to define toRDF to true in the options parameter
       */
-      toRDF: false,
+      toRDF: true,
       functions: {
         combineFields: function (data: string[]) {
           let combined = '';
