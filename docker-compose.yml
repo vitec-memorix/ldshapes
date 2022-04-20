@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    # entrypoint: tail -f /dev/null
+
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      # args:
+      #   BACKEND_URL: ${BACKEND_URL-true}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - 8080:8080
+    environment:
+      - BACKEND_URL=http://backend:3000
+    # entrypoint: tail -f /dev/null
+
