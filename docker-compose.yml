@@ -9,15 +9,12 @@ services:
     restart: unless-stopped
     ports:
       - 3000:3000
-    # entrypoint: tail -f /dev/null
 
 
   frontend:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
-      # args:
-      #   BACKEND_URL: ${BACKEND_URL-true}
     restart: unless-stopped
     depends_on:
       - backend
@@ -25,5 +22,3 @@ services:
       - 8080:8080
     environment:
       - BACKEND_URL=http://backend:3000
-    # entrypoint: tail -f /dev/null
-

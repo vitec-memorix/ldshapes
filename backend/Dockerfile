@@ -14,7 +14,7 @@ WORKDIR /app
 # USER nodejs
 
 COPY ./backend backend
-# COPY ./resources resources
+COPY ./resources resources
 
 WORKDIR /app/backend
 
