@@ -40,6 +40,14 @@ cd frontend
 npm run serve
 ```
 
+## Deploying with docker
+
+Alternatively you can also deploy the backend on http://localhost:3000, and the frontend on http://localhost:8080 with docker:
+
+```bash
+docker-compose up
+```
+
 ## Testing the backend
 
 ```bash
